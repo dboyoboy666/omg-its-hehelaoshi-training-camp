@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>何何老师多合一专题训练营</title>
+<meta name="build" content="NAV-20261014-0155">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
+<style>
+/* =====================================================================
+   何何老师多合一专题训练营 · 线上应用导航页
+   风格基底：图1（浅蓝水面 / 睡猫 / 涟漪，原画静态涟漪保留）
+   + 图2（紫色渐变高亮标题）+ 图3（橙色渐变标语）；
+   标语滚动规则复刻课件首页「何何老师@PFLS」环绕接力式播送带
+   （每副本 = 一整带宽，translateX(0→-50%)，带宽÷28.4px/s，反向播放；
+    字号按带宽收紧，完整句子一趟可见）。
+   大标题字体：WPS「小学生手写字体」（子集化内嵌，11 字 / 4.6KB）。
+   ===================================================================== */
+@font-face{
+  font-family:'XiaoXueShengShouXie';
+  src:url(data:font/woff2;base64,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) format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+:root{
+  --ink:#16324f; --ink-soft:#3f5f8a; --muted:#5b7ba6;
+  --blue:#3b82f6; --blue-deep:#2563eb; --indigo:#4f46e5;
+  /* 图1 底图自然高度（1918:856，2026-10-14 高清版），用于背景缝合对齐 */
+  --art-h: calc(100vw * 856 / 1918);
+  --seam-up: 170px;    /* 缝合层从底图底边上方多少 px 开始淡入 */
+  --seam-fade: 200px;  /* 淡入完成距离 */
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  color:var(--ink);
+  /* 底色 = 图1 底部水色的水平渐变（左#96BDFB → 中#9ABFFC → 右#85B3F5），
+     上叠一层自页面中部才开始的纵向加深：顶部保持与原画水色一致，
+     向下逐渐衍展为更深的水色，与模糊缝合层无缝衔接 */
+  background-image:
+    linear-gradient(180deg, rgba(30,64,150,0) 0%, rgba(30,64,150,0) 38%, rgba(30,64,150,.07) 64%, rgba(30,64,150,.18) 84%, rgba(30,64,150,.30) 100%),
+    linear-gradient(90deg, #96BDFB 0%, #9ABFFC 50%, #85B3F5 100%);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ==================== 背景层：插画 + 模糊缝合 + 伪3D 涟漪 ==================== */
+.bg{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+/* 图1 原画：贴顶全宽，保持原比例 */
+.bgArt{
+  position:absolute; left:0; top:0; width:100%; height:var(--art-h);
+  background:url('bg.jpg') center center / 100% 100% no-repeat;
+}
+/* 模糊缝合层：与原画逐像素对齐的模糊副本，从原画底边上方 --seam-up 处
+   淡入到完全模糊，再凭借模糊外扩自然溶入底色——消除上下硬边界，
+   实现「模糊淡入淡出」式衔接；画面下半部分由底色渐变 + 全屏涟漪延续 */
+.bgSeam{
+  position:absolute; left:0; right:0; top:calc(var(--art-h) - var(--seam-up)); bottom:0;
+  background:url('bg.jpg') center calc(var(--seam-up) - var(--art-h)) / 100% auto no-repeat;
+  filter:blur(20px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 var(--seam-fade));
+          mask-image:linear-gradient(180deg, transparent 0, #000 var(--seam-fade));
+}
+/* ---- 伪 3D 动态涟漪：若干中心点各自向外缓缓荡漾 ----
+   视觉原理：①柔和的径向渐变环（非细线）；②椭圆压扁（scaleY .66→.30），
+   模拟斜视角下的水面圆环；③越扩张越淡（能量衰减）；④中心点微光呼吸；
+   ⑤环径随扩张增大、模糊感增强，形成带 Z 轴的纵深远近。 */
+.ripples{position:absolute; inset:0; overflow:hidden;}
+.rp{
+  position:absolute; left:var(--x); top:var(--y);
+  width:var(--w); height:var(--w); border-radius:50%;
+  transform:translate(-50%,-50%) scale(.04);
+  opacity:0;
+  background:radial-gradient(closest-side,
+    rgba(255,255,255,0) 54%,
+    rgba(255,255,255,.05) 63%,
+    rgba(255,255,255,var(--o,.4)) 73%,
+    rgba(255,255,255,.10) 83%,
+    rgba(255,255,255,0) 95%);
+  filter:blur(var(--b,6px));
+  animation:rp3d var(--dur,10s) cubic-bezier(.25,.6,.35,1) var(--d,0s) infinite;
+  will-change:transform,opacity;
+}
+@keyframes rp3d{
+  0%{transform:translate(-50%,-50%) scale(.04) scaleY(.66); opacity:0;}
+  12%{opacity:1;}
+  55%{opacity:.7;}
+  100%{transform:translate(-50%,-50%) scale(1) scaleY(.3); opacity:0;}
+}
+/* 中心点微光：光源在涟漪中心的水面反光 */
+.rpCore{
+  position:absolute; left:var(--x); top:var(--y);
+  width:calc(var(--w) * .22); height:calc(var(--w) * .22); border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side, rgba(255,255,255,.30), rgba(255,255,255,.09) 55%, rgba(255,255,255,0) 78%);
+  filter:blur(5px);
+  animation:corePulse 5.6s ease-in-out var(--d,0s) infinite;
+}
+@keyframes corePulse{
+  0%,100%{opacity:.5; transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:.85; transform:translate(-50%,-50%) scale(1.14);}
+}
+
+/* ==================== 内容舞台（grid 居中，内容超高时不被裁切） ==================== */
+.stage{
+  position:relative; z-index:1; min-height:100vh;
+  display:grid; justify-items:center; align-content:center;
+  gap:clamp(18px,3.2vh,32px);
+  padding:clamp(22px,4.5vh,52px) 16px;
+}
+
+/* ---- 标题区（毛玻璃云朵，保证渐变文字在任何背景上都清晰） ---- */
+.headBlock{
+  display:inline-block; text-align:left;
+  background:rgba(255,255,255,.40);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.6); border-radius:22px;
+  box-shadow:0 18px 50px rgba(21,60,120,.16);
+  padding:clamp(14px,2.2vh,22px) clamp(12px,2.2vw,30px);
+}
+/* 大标题：小学生手写字体 + 紫渐变（图2色调）+ 高光扫过 + 动态渐变 + 微浮动 */
+.title{
+  font-family:'XiaoXueShengShouXie',"Hannotate SC","Xingkai SC","Kaiti SC",KaiTi,STKaiti,serif;
+  font-size:clamp(24px,6.6vw,66px); font-weight:400;
+  white-space:nowrap; letter-spacing:.04em; line-height:1.32;
+  padding:0 8px; /* 容纳浮动位移，避免裁切 */
+}
+.title span{
+  display:inline-block;
+  background-image:
+    linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.92) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(115deg, #F3E8FF 0%, #C084FC 20%, #A855F7 42%, #7C3AED 62%, #6D28D9 80%, #C084FC 100%);
+  background-size:300% 100%, 220% 220%;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  animation:titleFloat 10.4s ease-in-out infinite, titleSheen 6.5s ease-in-out infinite;
+}
+@keyframes titleFloat{
+  0%,100%{transform:translate(0,0);}
+  25%{transform:translate(2px,-6px);}
+  50%{transform:translate(0,-10px);}
+  75%{transform:translate(-2px,-6px);}
+}
+@keyframes titleSheen{
+  0%,100%{background-position:100% 50%, 0% 45%;}
+  50%{background-position:0% 50%, 100% 55%;}
+}
+
+/* 第二行：环绕接力式播送带（复刻课件「何何老师@PFLS」滚动规则，反向播放）——
+   结构复刻课件封面：orbitRun 宽 200%，每副本宽 50%（= 一整带宽），
+   整体 translateX(0→-50%) 平移一幅循环（文字向左游走，新文案从右侧进入）；
+   带内可见量恒等于一份完整文案（主体 + 绕回的尾巴左右相加），
+   结构上不可能同屏出现第二份、也不会把句子切断在带外。
+   字号由 JS 按实测带宽收紧（完整句子一趟可见），两侧 2.5% 渐隐遮罩兜底边缘；
+   时长 = 带宽÷28.4px/s（JS 按实时带宽重算）。 */
+.orbit{
+  position:relative; width:100%; height:2.3em;
+  margin-top:clamp(8px,1.4vh,14px);
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+          mask-image:linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+}
+.orbitRun{
+  position:absolute; left:0; top:.24em;
+  width:200%; display:inline-flex; white-space:nowrap;
+  font-size:clamp(12px,1.7vw,16px); font-weight:800; letter-spacing:.05em; line-height:1.6;
+  will-change:transform;
+  animation:orbitSweep 30s linear infinite; /* 默认值，JS 按带宽重算 */
+}
+.orbitRun .oc{
+  flex:none; width:50%; text-align:center; /* 每副本 = 一整带宽；文本居中使两缘对称（边距=3.5%带宽 > 遮罩淡区2.5%，任何视口句首句尾均不侵入淡区） */
+  background-image:
+    linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(115deg, #FFE8CC 0%, #FDBA74 20%, #FB923C 42%, #F97316 60%, #EA580C 78%, #FDBA74 100%);
+  background-size:300% 100%, 220% 220%;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  animation:ocFloat 10.4s ease-in-out infinite, titleSheen 6.5s ease-in-out infinite;
+}
+@keyframes ocFloat{
+  0%,100%{transform:translate(0,0);}
+  30%{transform:translate(2px,-4px);}
+  65%{transform:translate(-2px,-6px);}
+}
+@keyframes orbitSweep{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ==================== 课件卡片槽位 ==================== */
+.cards{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(12px,1.6vw,18px);
+  width:min(1160px,94vw);
+}
+.card{
+  position:relative; overflow:hidden;
+  width:clamp(146px,15.2vw,184px); min-height:214px;
+  border-radius:20px;
+  background:rgba(255,255,255,.10);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:0 10px 28px rgba(21,60,120,.18);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:9px; padding:22px 14px 18px;
+  cursor:pointer; user-select:none; touch-action:manipulation;
+  transition:transform .28s cubic-bezier(.22,1.2,.36,1), box-shadow .28s, border-color .28s;
+}
+/* 动态渐变底层：仿大标题的流动渐变（半透明紫）。
+   渐变在图层内部滑动（background-position 驱动）而非整层平移——
+   图层恒等于卡片尺寸，任何时刻都完整覆盖，杜绝左右漂移露底。 */
+.card::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:linear-gradient(115deg,
+    rgba(237,233,254,.66) 0%, rgba(196,181,253,.56) 22%, rgba(167,139,250,.50) 45%,
+    rgba(99,102,241,.46) 68%, rgba(165,180,252,.60) 100%);
+  background-size:200% 100%;
+  animation:cardFlow 8.5s ease-in-out infinite alternate;
+}
+@keyframes cardFlow{from{background-position:0% 50%;}to{background-position:100% 50%;}}
+/* 悬停提亮层 */
+.card::after{
+  content:""; position:absolute; inset:0; z-index:0; border-radius:inherit;
+  background:linear-gradient(160deg, rgba(255,255,255,.42), rgba(255,255,255,.05) 60%);
+  opacity:0; transition:opacity .28s; pointer-events:none;
+}
+.card:hover::after{opacity:1;}
+.card > *{position:relative; z-index:1;}
+.card:hover{
+  transform:translateY(-9px) scale(1.035);
+  box-shadow:0 22px 44px rgba(21,60,120,.28);
+}
+.card:active{transform:translateY(-4px) scale(.99);}
+.card .icon{
+  width:58px; height:58px; border-radius:16px;
+  display:grid; place-items:center;
+  font-family:"STKaiti","Kaiti SC",KaiTi,serif; font-size:30px; font-weight:700; color:#fff;
+  background:linear-gradient(135deg,#7CB3F5,#3B82F6 55%,#4F46E5);
+  box-shadow:0 8px 18px rgba(59,130,246,.40), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .28s;
+}
+.card:hover .icon{animation:iconPop .6s ease;}
+@keyframes iconPop{
+  0%,100%{transform:translateY(0) scale(1);}
+  35%{transform:translateY(-7px) scale(1.09);}
+  70%{transform:translateY(2px) scale(.98);}
+}
+.card .c-title{font-size:16px; font-weight:800; color:var(--ink); line-height:1.35; text-align:center;}
+.card .c-sub{font-size:12px; color:var(--muted); text-align:center; letter-spacing:.5px;}
+.card .cta{font-size:12px; font-weight:700; color:var(--blue-deep); margin-top:2px; letter-spacing:1px;}
+.card .cta i{font-style:normal; display:inline-block; transition:transform .28s;}
+.card:hover .cta i{transform:translateX(4px);}
+/* 高光一扫而过（悬停时保留） */
+.card .shine{position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none; z-index:1;}
+.card .shine::after{
+  content:""; position:absolute; top:-60%; left:-130%; width:58%; height:220%;
+  transform:rotate(18deg);
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  transition:left .7s ease;
+}
+.card:hover .shine::after{left:135%;}
+/* 置顶徽标 */
+.pin{
+  position:absolute; top:10px; right:10px; z-index:2;
+  font-size:11px; font-weight:700; color:#fff; letter-spacing:2px;
+  background:linear-gradient(90deg,#FB923C,#EA580C);
+  padding:3px 9px 3px 11px; border-radius:999px;
+  box-shadow:0 4px 10px rgba(249,115,22,.35);
+}
+/* 预留空槽：同款动态渐变（更透一些）+ 虚线边 */
+.card.slot{border:2px dashed rgba(99,102,241,.5); box-shadow:none;}
+.card.slot::before{
+  background:linear-gradient(115deg,
+    rgba(237,233,254,.42) 0%, rgba(196,181,253,.36) 22%, rgba(167,139,250,.32) 45%,
+    rgba(99,102,241,.30) 68%, rgba(165,180,252,.40) 100%);
+  background-size:200% 100%;
+}
+.card.slot:hover{border-color:rgba(99,102,241,.8);}
+.card.slot .icon{
+  background:rgba(59,130,246,.12); color:var(--blue);
+  box-shadow:none; font-size:26px; font-weight:300;
+}
+.card.slot .c-title{color:var(--ink-soft);}
+/* 添加课件位（最后一格的功能位）：橙色系动态渐变 + 虚线边 */
+.card.add{border:2px dashed rgba(249,115,22,.55);}
+.card.add::before{
+  background:linear-gradient(115deg,
+    rgba(255,237,213,.48) 0%, rgba(253,186,116,.40) 30%, rgba(251,146,60,.34) 60%,
+    rgba(255,237,213,.46) 100%);
+  background-size:200% 100%;
+}
+.card.add:hover{border-color:rgba(249,115,22,.85);}
+.card.add .icon{
+  background:rgba(249,115,22,.14); color:#EA580C;
+  box-shadow:none; font-size:28px; font-weight:400;
+}
+.card.add .c-title{color:#9a3412;}
+.card.add .c-sub{color:#c2410c;}
+/* 超出 10 个同屏上限时折叠隐藏 */
+.card.is-hidden{display:none;}
+/* 拖动态效 */
+.card.dragging{opacity:.45; transform:scale(1.05) rotate(1.5deg); cursor:grabbing;}
+.card.dropzone{outline:3px dashed rgba(249,115,22,.85); outline-offset:3px; transform:translateY(-6px) scale(1.02);}
+
+/* ---- 「更多课件」折叠按钮（小巧） ---- */
+.moreBtn{
+  display:none;
+  font-family:inherit; font-size:clamp(12px,1.1vw,13.5px); font-weight:700; letter-spacing:1px;
+  color:#fff; cursor:pointer;
+  padding:9px 22px; border-radius:999px; border:1px solid rgba(255,255,255,.5);
+  background:linear-gradient(95deg,#7C3AED,#6366F1 55%,#3B82F6);
+  background-size:200% 100%;
+  box-shadow:0 8px 20px rgba(79,70,229,.30);
+  transition:transform .25s, box-shadow .25s;
+  animation:btnFlow 7s ease-in-out infinite alternate;
+}
+@keyframes btnFlow{from{background-position:0% 50%;}to{background-position:100% 50%;}}
+.moreBtn:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(79,70,229,.38);}
+.moreBtn .chev{display:inline-block; margin-left:6px; transition:transform .25s;}
+.moreBtn.open .chev{transform:rotate(180deg);}
+
+/* ---- 底部：版权 ---- */
+.copyright{
+  font-size:clamp(11px,1.05vw,13px); color:var(--ink-soft); letter-spacing:.6px;
+  background:rgba(255,255,255,.48); padding:8px 20px; border-radius:999px;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.6);
+}
+
+/* ---- 轻提示 ---- */
+.toast{
+  position:fixed; left:50%; bottom:36px; transform:translate(-50%,16px);
+  background:rgba(22,50,79,.92); color:#fff;
+  padding:10px 22px; border-radius:999px; font-size:14px; letter-spacing:1px;
+  opacity:0; transition:.32s ease; z-index:50; pointer-events:none;
+  box-shadow:0 10px 26px rgba(0,0,0,.26);
+}
+.toast.show{opacity:1; transform:translate(-50%,0);}
+
+/* ==================== 背景切换器：右上角小按钮 + 密钥解锁菜单 ==================== */
+#bgBtn{
+  position:fixed; top:18px; right:18px; z-index:1200;
+  width:38px; height:38px; padding:0;
+  display:flex; align-items:center; justify-content:center;
+  border:1.5px solid rgba(255,255,255,.65);
+  border-radius:999px;
+  background:rgba(255,255,255,.42);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  box-shadow:0 4px 18px rgba(22,50,79,.14);
+  color:var(--ink); font-size:13px; font-weight:700; letter-spacing:.06em;
+  cursor:pointer; transition:transform .25s, box-shadow .25s, background .25s;
+}
+#bgBtn:hover{transform:translateY(-2px); background:rgba(255,255,255,.62); box-shadow:0 8px 24px rgba(22,50,79,.2);}
+#bgBtn .bgBtnIcon{font-size:17px; line-height:1;}
+#bgPanel{
+  position:fixed; top:64px; right:18px; z-index:1200; width:272px;
+  border:1.5px solid rgba(255,255,255,.7); border-radius:16px;
+  background:rgba(255,255,255,.85);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2); backdrop-filter:blur(16px) saturate(1.2);
+  box-shadow:0 14px 44px rgba(22,50,79,.22);
+  padding:14px; display:none;
+}
+#bgPanel.open{display:block; animation:bgPanelIn .28s ease;}
+@keyframes bgPanelIn{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:none;}}
+#bgPanel h3{font-size:14px; color:var(--ink); margin-bottom:10px; letter-spacing:.04em;}
+#bgLockRow{display:flex; gap:8px;}
+#bgPwd{
+  flex:1; min-width:0; box-sizing:border-box; padding:8px 11px; font-size:13px; letter-spacing:.18em;
+  border:1.5px solid rgba(59,130,246,.4); border-radius:9px; outline:none;
+  background:rgba(255,255,255,.9); color:var(--ink);
+}
+#bgPwd:focus{border-color:var(--blue);}
+#bgPwd.bad{border-color:#dc2626; animation:bgShake .38s;}
+@keyframes bgShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+#bgUnlock{
+  padding:8px 14px; font-size:13px; font-weight:700; color:#fff; letter-spacing:.1em;
+  background:linear-gradient(180deg,#60a5fa,#2563eb); border:none; border-radius:9px; cursor:pointer;
+}
+#bgUnlock:hover{filter:brightness(1.08);}
+#bgUnlock:disabled{opacity:.55; cursor:default;}
+#bgErr{height:16px; margin-top:6px; font-size:11.5px; color:#dc2626;}
+#bgList{margin-top:10px; display:none; flex-direction:column; gap:7px;}
+#bgList.on{display:flex;}
+.bgItem{
+  display:flex; align-items:center; gap:9px; padding:7px 9px;
+  border:1.5px solid rgba(59,130,246,.22); border-radius:10px; cursor:pointer;
+  background:rgba(255,255,255,.55); transition:border-color .2s, background .2s;
+}
+.bgItem:hover{border-color:var(--blue); background:rgba(255,255,255,.85);}
+.bgItem.active{border-color:var(--blue-deep); background:rgba(59,130,246,.12);}
+.bgItem .bgThumb{
+  width:44px; height:26px; border-radius:6px; object-fit:cover; flex:none;
+  background:rgba(22,50,79,.08); border:1px solid rgba(22,50,79,.1);
+}
+.bgItem .bgName{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:12.5px; color:var(--ink); font-weight:600; letter-spacing:.02em;}
+.bgItem .bgDel{
+  flex:none; width:22px; height:22px; border:none; border-radius:6px; cursor:pointer;
+  background:rgba(220,38,38,.1); color:#dc2626; font-size:12px; line-height:1;
+}
+.bgItem .bgDel:hover{background:rgba(220,38,38,.22);}
+#bgOps{margin-top:11px; padding-top:11px; border-top:1px dashed rgba(59,130,246,.3); display:none;}
+#bgOps.on{display:block;}
+#bgImportBtn{
+  width:100%; padding:8px 0; font-size:12.5px; font-weight:700; letter-spacing:.08em;
+  color:var(--blue-deep); background:rgba(59,130,246,.1);
+  border:1.5px dashed rgba(59,130,246,.45); border-radius:9px; cursor:pointer;
+}
+#bgImportBtn:hover{background:rgba(59,130,246,.18);}
+#bgStretchRow{
+  display:flex; align-items:center; gap:8px; margin-top:10px;
+  font-size:12.5px; color:var(--ink); cursor:pointer; user-select:none;
+}
+#bgStretch{width:16px; height:16px; accent-color:var(--blue-deep); cursor:pointer;}
+@media (max-width:480px){
+  #bgBtn{width:34px; height:34px; padding:0;}
+  #bgPanel{width:calc(100vw - 36px);}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- 背景：图1 原画（静态涟漪保留）+ 模糊缝合 + 伪 3D 动态涟漪（多环叠加套装） -->
+<div class="bg" aria-hidden="true">
+  <div class="bgArt"></div>
+  <div class="bgSeam"></div>
+  <div class="ripples">
+    <!-- 猫身周围 3 个中心点（对齐原画涟漪位置），各自多环向外荡漾 -->
+    <span class="rpCore" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--d:0s;"></span>
+    <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--o:.42;--b:6px;--d:0s;   --dur:10s;"></span>
+    <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--o:.34;--b:7px;--d:3.3s; --dur:10s;"></span>
+    <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:52vw;--o:.22;--b:9px;--d:6.6s; --dur:13s;"></span>
+
+    <span class="rpCore" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--d:1.2s;"></span>
+    <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--o:.40;--b:6px;--d:.9s;  --dur:9.5s;"></span>
+    <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--o:.32;--b:7px;--d:4.1s; --dur:9.5s;"></span>
+    <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:46vw;--o:.20;--b:9px;--d:7.6s; --dur:12.5s;"></span>
+
+    <span class="rpCore" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--d:2.4s;"></span>
+    <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--o:.40;--b:6px;--d:1.8s; --dur:10.5s;"></span>
+    <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--o:.32;--b:7px;--d:5.2s; --dur:10.5s;"></span>
+    <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:48vw;--o:.20;--b:9px;--d:8.6s; --dur:13.5s;"></span>
+
+    <!-- 衍展区的 2 个中心点（图6/图7 卡片位周边）：与猫身同款多环叠加套装 -->
+    <span class="rpCore" style="--x:22%;--y:62vh;--w:44vw;--d:3s;"></span>
+    <span class="rp" style="--x:22%;--y:62vh;--w:44vw;--o:.42;--b:6px;--d:1.5s; --dur:12s;"></span>
+    <span class="rp" style="--x:22%;--y:62vh;--w:44vw;--o:.34;--b:7px;--d:4.8s; --dur:12s;"></span>
+    <span class="rp" style="--x:22%;--y:62vh;--w:60vw;--o:.22;--b:9px;--d:8.1s; --dur:15s;"></span>
+
+    <span class="rpCore" style="--x:80%;--y:80vh;--w:40vw;--d:4.2s;"></span>
+    <span class="rp" style="--x:80%;--y:80vh;--w:40vw;--o:.42;--b:6px;--d:2.6s; --dur:12.5s;"></span>
+    <span class="rp" style="--x:80%;--y:80vh;--w:40vw;--o:.34;--b:7px;--d:5.9s; --dur:12.5s;"></span>
+    <span class="rp" style="--x:80%;--y:80vh;--w:56vw;--o:.22;--b:9px;--d:9.2s; --dur:15.5s;"></span>
+  </div>
+</div>
+
+<main class="stage">
+
+  <!-- 标题区：大标题 + 环绕滚动标语（左缘与标题垂直对齐） -->
+  <header class="headBlock">
+    <h1 class="title" id="mainTitle">何何老师多合一专题训练营</h1>
+    <div class="orbit" role="marquee" aria-label="寓教于乐、沉浸式PK、挑战连连、头脑风暴、思维迁移、聚焦实操，让你爱上学习、爱上挑战、爱上自己～">
+      <div class="orbitRun" id="orbitRun">
+        <span class="oc">寓教于乐、沉浸式PK、挑战连连、头脑风暴、思维迁移、聚焦实操，让你爱上学习、爱上挑战、爱上自己～</span>
+        <span class="oc">寓教于乐、沉浸式PK、挑战连连、头脑风暴、思维迁移、聚焦实操，让你爱上学习、爱上挑战、爱上自己～</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 互动课件卡片槽位（可拖动交换位置；首行 5 个，最后一格为「添加课件位」） -->
+  <section class="cards" id="cardRow" aria-label="互动课件卡片">
+    <article class="card game" draggable="true" data-href="course.html"
+             data-title="铸铭问鼎论英雄" data-sub="大篆训练营 · 互动课件"
+             data-icon="铭" data-pinned="1" title="铸铭问鼎论英雄 · 大篆训练营">
+      <span class="pin">置顶</span>
+      <span class="shine"></span>
+      <span class="icon">铭</span>
+      <span class="c-title">铸铭问鼎论英雄</span>
+      <span class="c-sub">大篆训练营 · 互动课件</span>
+      <span class="cta">点击进入 <i>›</i></span>
+    </article>
+    <article class="card slot" draggable="true" title="预留课件位">
+      <span class="shine"></span>
+      <span class="icon">＋</span>
+      <span class="c-title">虚位以待</span>
+      <span class="c-sub">预留互动游戏课件位</span>
+    </article>
+    <article class="card slot" draggable="true" title="预留课件位">
+      <span class="shine"></span>
+      <span class="icon">＋</span>
+      <span class="c-title">虚位以待</span>
+      <span class="c-sub">预留互动游戏课件位</span>
+    </article>
+    <article class="card slot" draggable="true" title="预留课件位">
+      <span class="shine"></span>
+      <span class="icon">＋</span>
+      <span class="c-title">虚位以待</span>
+      <span class="c-sub">预留互动游戏课件位</span>
+    </article>
+  </section>
+
+  <!-- 超出 10 个同屏上限时，折叠隐藏的课件位经此按钮展开 -->
+  <button class="moreBtn" id="moreBtn" type="button">
+    <span id="moreLabel">更多课件</span><span id="moreCount"></span><span class="chev">▾</span>
+  </button>
+
+  <p class="copyright">Copyright © 2026 何何老师@PFLS. All rights reserved.</p>
+</main>
+
+<!-- 背景切换器：右上角小按钮 + 密钥解锁菜单（切换/导入/删除/智能拉伸） -->
+<button id="bgBtn" type="button" title="切换背景图片"><span class="bgBtnIcon">🎨</span></button>
+<div id="bgPanel" role="dialog" aria-label="背景图片管理">
+  <h3>背景图片管理</h3>
+  <div id="bgLockRow">
+    <input id="bgPwd" type="password" placeholder="请输入密钥" autocomplete="off">
+    <button id="bgUnlock" type="button">解锁</button>
+  </div>
+  <div id="bgErr"></div>
+  <div id="bgList"></div>
+  <div id="bgOps">
+    <button id="bgImportBtn" type="button">＋ 导入本地图片</button>
+    <input id="bgFile" type="file" accept="image/*" hidden>
+    <label id="bgStretchRow" for="bgStretch"><input id="bgStretch" type="checkbox"> 智能拉伸图片至满屏</label>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 大标题：逐字拆分 + 波浪式延迟 ---------- */
+  var title = document.getElementById('mainTitle');
+  var text = (title.textContent || '').trim();
+  title.textContent = '';
+  Array.prototype.forEach.call(text, function(ch, i){
+    var s = document.createElement('span');
+    s.textContent = ch;
+    s.style.animationDelay = (i * 0.32) + 's, ' + (i * 0.45) + 's';
+    title.appendChild(s);
+  });
+
+  /* ---------- 播送带：字号按带宽收紧（完整句子一趟可见）+ 时长按 28.4px/s ---------- */
+  var orbitBox = document.querySelector('.orbit');
+  var run = document.getElementById('orbitRun');
+  function fitOrbit(){
+    var ocs = run.querySelectorAll('.oc');
+    if(!ocs.length || !orbitBox) return;
+    var W = orbitBox.clientWidth;      /* 播送带实测带宽 */
+    if(!W) return;
+    /* 结构复刻课件封面：每副本 = 一整带宽（.oc 宽 50% × orbitRun 200%）。
+       字号收紧到「完整句子落入可见区」（实测 48 字 ≈ 49.7em 宽），
+       保证整句不换行、不被带缘裁切；窄屏保底下限 11px（届时改为滚动渐隐）。 */
+    var fs = Math.max(11, Math.min(16, (W * 0.93) / 49.7));
+    run.style.fontSize = fs.toFixed(1) + 'px';
+    /* 时长 = 带宽 ÷ 28.4px/s（速度口径复刻课件首页） */
+    run.style.animationDuration = (W / 28.4).toFixed(1) + 's';
+  }
+  var rzT = null;
+  function onResize(){
+    if(rzT) clearTimeout(rzT);
+    rzT = setTimeout(fitOrbit, 180);
+  }
+  window.addEventListener('resize', onResize);
+  window.addEventListener('load', fitOrbit);
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitOrbit); }
+  setTimeout(fitOrbit, 400);
+
+  /* ---------- 轻提示 ---------- */
+  function toast(msg){
+    var old = document.querySelector('.toast');
+    if(old) old.remove();
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add('show'); });
+    setTimeout(function(){
+      t.classList.remove('show');
+      setTimeout(function(){ t.remove(); }, 360);
+    }, 2000);
+  }
+
+  /* ---------- 课件卡片：数据模型驱动 ---------- */
+  var MAX_VISIBLE = 10;          /* 同屏最多显示 10 个课件位，超出折叠 */
+  var row = document.getElementById('cardRow');
+  var moreBtn = document.getElementById('moreBtn');
+  var moreLabel = document.getElementById('moreLabel');
+  var moreCount = document.getElementById('moreCount');
+
+  /* 初始模型直接采自静态 DOM（单一数据源：无 JS 时静态卡片依然可见） */
+  var items = [];
+  Array.prototype.forEach.call(row.children, function(el){
+    var href = el.getAttribute('data-href');
+    if(href){
+      items.push({
+        type:'course', href:href,
+        title:el.getAttribute('data-title') || '',
+        sub:el.getAttribute('data-sub') || '',
+        icon:el.getAttribute('data-icon') || '课',
+        pinned:el.hasAttribute('data-pinned')
+      });
+    }else{
+      items.push({ type:'slot' });
+    }
+  });
+  var expanded = false;
+
+  /* 「添加课件位」功能卡：固定位于末尾，不参与拖动交换 */
+  var addCard = document.createElement('article');
+  addCard.className = 'card add';
+  addCard.setAttribute('title', '添加更多课件位');
+  addCard.draggable = false;
+  addCard.innerHTML =
+    '<span class="shine"></span>' +
+    '<span class="icon">＋</span>' +
+    '<span class="c-title">添加课件位</span>' +
+    '<span class="c-sub">点击添加更多栏位</span>';
+
+  function buildCard(item){
+    var card = document.createElement('article');
+    if(item.type === 'course'){
+      card.className = 'card game';
+      card.setAttribute('data-href', item.href);
+      card.setAttribute('title', item.title);
+      card.draggable = true;
+      card.innerHTML =
+        (item.pinned ? '<span class="pin">置顶</span>' : '') +
+        '<span class="shine"></span>' +
+        '<span class="icon">' + item.icon + '</span>' +
+        '<span class="c-title">' + item.title + '</span>' +
+        '<span class="c-sub">' + item.sub + '</span>' +
+        '<span class="cta">点击进入 <i>›</i></span>';
+    }else{
+      card.className = 'card slot';
+      card.setAttribute('title', '预留课件位');
+      card.draggable = true;
+      card.innerHTML =
+        '<span class="shine"></span>' +
+        '<span class="icon">＋</span>' +
+        '<span class="c-title">虚位以待</span>' +
+        '<span class="c-sub">预留互动游戏课件位</span>';
+    }
+    return card;
+  }
+
+  function render(){
+    row.innerHTML = '';
+    var visible = expanded ? items.length : Math.min(items.length, MAX_VISIBLE);
+    items.forEach(function(item, i){
+      var card = buildCard(item);
+      if(i >= visible) card.classList.add('is-hidden');
+      row.appendChild(card);
+    });
+    row.appendChild(addCard);
+
+    var hidden = items.length - MAX_VISIBLE;
+    if(hidden > 0){
+      moreBtn.style.display = 'inline-block';
+      moreCount.textContent = '（' + hidden + '）';
+      moreLabel.textContent = expanded ? '收起课件' : '更多课件';
+      moreBtn.classList.toggle('open', expanded);
+      moreBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    }else{
+      moreBtn.style.display = 'none';
+    }
+    bindCards();
+  }
+
+  /* ---------- 拖动交换 + 点击行为 ---------- */
+  var dragEl = null;
+  var suppressClick = false;
+
+  function bindCards(){
+    var cards = row.querySelectorAll('.card:not(.add)');
+    Array.prototype.forEach.call(cards, function(card){
+      card.addEventListener('dragstart', function(e){
+        dragEl = card;
+        suppressClick = true;
+        card.classList.add('dragging');
+        if(e.dataTransfer){
+          e.dataTransfer.effectAllowed = 'move';
+          try{ e.dataTransfer.setData('text/plain', 'card'); }catch(err){}
+        }
+      });
+      card.addEventListener('dragend', function(){
+        card.classList.remove('dragging');
+        cards.forEach(function(c){ c.classList.remove('dropzone'); });
+        dragEl = null;
+      });
+      card.addEventListener('dragover', function(e){
+        if(!dragEl || dragEl === card) return;
+        e.preventDefault();
+        if(e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        card.classList.add('dropzone');
+      });
+      card.addEventListener('dragleave', function(){
+        card.classList.remove('dropzone');
+      });
+      card.addEventListener('drop', function(e){
+        e.preventDefault();
+        card.classList.remove('dropzone');
+        if(!dragEl || dragEl === card) return;
+        /* 交换两张卡片的位置（占位节点法，任意相对位置都安全） */
+        var kids = Array.prototype.filter.call(row.children, function(el){ return el !== addCard; });
+        var i = kids.indexOf(dragEl), j = kids.indexOf(card);
+        if(i > -1 && j > -1){
+          var tmp = items[i]; items[i] = items[j]; items[j] = tmp;
+        }
+        var ph = document.createElement('div');
+        ph.style.display = 'none';
+        row.insertBefore(ph, card);
+        row.insertBefore(card, dragEl);
+        row.replaceChild(dragEl, ph);
+        dragEl = null;
+      });
+      card.addEventListener('click', function(){
+        if(suppressClick){ suppressClick = false; return; }   /* 拖动结束误触的 click 吞掉 */
+        var href = card.getAttribute('data-href');
+        if(href){ window.location.href = href; }
+        else{ toast('该课件位虚位以待，敬请期待～'); }
+      });
+    });
+  }
+
+  /* ---------- 添加课件位（数量不限） ---------- */
+  addCard.addEventListener('click', function(){
+    items.push({ type:'slot' });
+    var autoExpanded = false;
+    if(!expanded && items.length > MAX_VISIBLE){ expanded = true; autoExpanded = true; }
+    render();
+    toast(autoExpanded ? '已添加课件位，超出 10 个的部分已自动展开' : '已添加一个预留课件位～');
+  });
+
+  /* ---------- 更多 / 收起折叠 ---------- */
+  moreBtn.addEventListener('click', function(){
+    expanded = !expanded;
+    render();
+  });
+
+  /* ---------- 背景切换器：密钥解锁 + 切换/导入/删除 + 智能拉伸 ---------- */
+  (function(){
+    var KEY = 'zyywz';
+    var LS = 'hehe-bg-switch-v1';
+    var builtin = [
+      { id:'bg.jpg',  name:'蓝白水彩 · 高清原图' },
+      { id:'bg2.jpg', name:'暖调柔焦 · 梦境治愈' }
+    ];
+    var state = { active:'bg.jpg', stretch:false, custom:[] };
+    try{
+      var s = JSON.parse(localStorage.getItem(LS) || 'null');
+      if(s && typeof s.active === 'string'){
+        state.active = s.active;
+        state.stretch = !!s.stretch;
+        if(Array.isArray(s.custom)) state.custom = s.custom;
+      }
+    }catch(e){}
+    /* 防御：记录里的 active 若是失效的 dataURL 或未知值，回退到默认背景 */
+    var knownCustom = state.custom.some(function(c){ return c.id === state.active; });
+    if(state.active !== 'bg.jpg' && state.active !== 'bg2.jpg' && !knownCustom){
+      state.active = 'bg.jpg';
+    }
+
+    var btn     = document.getElementById('bgBtn');
+    var panel   = document.getElementById('bgPanel');
+    var pwd     = document.getElementById('bgPwd');
+    var err     = document.getElementById('bgErr');
+    var unlockB = document.getElementById('bgUnlock');
+    var list    = document.getElementById('bgList');
+    var ops     = document.getElementById('bgOps');
+    var file    = document.getElementById('bgFile');
+    var stretch = document.getElementById('bgStretch');
+
+    function persist(){
+      try{ localStorage.setItem(LS, JSON.stringify(state)); return true; }
+      catch(e){ return false; }
+    }
+    function applyBg(url){
+      var art = document.querySelector('.bgArt');
+      var seam = document.querySelector('.bgSeam');
+      if(art)  art.style.backgroundImage  = "url('" + url + "')";
+      if(seam) seam.style.backgroundImage = "url('" + url + "')";
+    }
+    function applyStretch(on){
+      var art = document.querySelector('.bgArt');
+      var seam = document.querySelector('.bgSeam');
+      if(!art) return;
+      if(on){
+        art.style.height = '100%';
+        art.style.backgroundSize = '100% 100%';
+        if(seam) seam.style.display = 'none';
+      }else{
+        art.style.height = '';
+        art.style.backgroundSize = '';
+        if(seam) seam.style.display = '';
+      }
+    }
+    function isCustom(id){ return state.custom.some(function(c){ return c.id === id; }); }
+
+    function render(){
+      list.innerHTML = '';
+      builtin.concat(state.custom).forEach(function(item){
+        var row = document.createElement('div');
+        row.className = 'bgItem' + (state.active === item.id ? ' active' : '');
+        var thumb = document.createElement('img');
+        thumb.className = 'bgThumb'; thumb.alt = ''; thumb.src = item.id;
+        var name = document.createElement('span');
+        name.className = 'bgName'; name.textContent = item.name;
+        row.appendChild(thumb); row.appendChild(name);
+        row.addEventListener('click', function(ev){
+          ev.stopPropagation();
+          state.active = item.id;
+          if(!persist()) toast('浏览器存储空间不足，偏好未保存');
+          applyBg(item.id);
+          render();
+          toast('已切换背景：' + item.name);
+        });
+        if(isCustom(item.id)){
+          var del = document.createElement('button');
+          del.className = 'bgDel'; del.type = 'button'; del.title = '删除这张背景';
+          del.textContent = '✕';
+          del.addEventListener('click', function(ev){
+            ev.stopPropagation();
+            state.custom = state.custom.filter(function(c){ return c.id !== item.id; });
+            if(state.active === item.id){
+              state.active = 'bg.jpg';
+              applyBg('bg.jpg');
+            }
+            persist(); render();
+            toast('已删除该背景');
+          });
+          row.appendChild(del);
+        }
+        list.appendChild(row);
+      });
+      stretch.checked = !!state.stretch;
+    }
+
+    function unlock(){
+      var v = (pwd.value || '').trim();
+      if(v === KEY){
+        err.textContent = '';
+        list.classList.add('on'); ops.classList.add('on');
+        pwd.disabled = true; unlockB.disabled = true; unlockB.textContent = '已解锁';
+        render();
+        toast('背景管理已解锁');
+      }else{
+        err.textContent = '密钥不对，请重试';
+        pwd.classList.remove('bad');
+        void pwd.offsetWidth;
+        pwd.classList.add('bad');
+        setTimeout(function(){ pwd.classList.remove('bad'); }, 450);
+      }
+    }
+
+    function readImage(f){
+      return new Promise(function(res, rej){
+        var fr = new FileReader();
+        fr.onload = function(){
+          var img = new Image();
+          img.onload = function(){
+            try{
+              var maxW = 1920, w = img.naturalWidth, h = img.naturalHeight;
+              if(w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+              var c = document.createElement('canvas');
+              c.width = w; c.height = h;
+              c.getContext('2d').drawImage(img, 0, 0, w, h);
+              res(c.toDataURL('image/jpeg', .85));
+            }catch(e){ rej(e); }
+          };
+          img.onerror = function(){ rej(new Error('decode')); };
+          img.src = fr.result;
+        };
+        fr.onerror = function(){ rej(new Error('read')); };
+        fr.readAsDataURL(f);
+      });
+    }
+
+    file.addEventListener('change', function(){
+      var f = file.files && file.files[0];
+      file.value = '';
+      if(!f) return;
+      if(!/^image\//.test(f.type)){ toast('请选择图片文件'); return; }
+      readImage(f).then(function(dataUrl){
+        var name = (f.name || '导入图片').replace(/\.[^.]+$/, '').slice(0, 10) || '导入图片';
+        state.custom.push({ id: dataUrl, name: name });
+        if(!persist()){
+          state.custom.pop();
+          toast('浏览器存储空间不足，导入失败');
+          return;
+        }
+        state.active = dataUrl;
+        applyBg(dataUrl); render();
+        toast('已导入并切换：' + name);
+      }).catch(function(){ toast('图片读取失败，请换一张试试'); });
+    });
+
+    stretch.addEventListener('change', function(){
+      state.stretch = stretch.checked;
+      persist();
+      applyStretch(state.stretch);
+      toast(state.stretch ? '已开启：智能拉伸至满屏' : '已关闭：恢复原画横带');
+    });
+
+    unlockB.addEventListener('click', unlock);
+    pwd.addEventListener('keydown', function(e){ if(e.key === 'Enter') unlock(); });
+
+    btn.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      panel.classList.toggle('open');
+    });
+    document.addEventListener('click', function(ev){
+      if(!panel.classList.contains('open')) return;
+      if(panel.contains(ev.target) || btn.contains(ev.target)) return;
+      panel.classList.remove('open');
+    });
+
+    /* 初始化：恢复上次选择与拉伸偏好 */
+    applyBg(state.active);
+    applyStretch(state.stretch);
+  })();
+
+  render();
+})();
+</script>
+</body>
+</html>
