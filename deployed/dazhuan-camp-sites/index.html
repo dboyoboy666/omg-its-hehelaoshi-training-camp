@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261015-2059">
+<meta name="build" content="NAV-20261015-2153">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -123,7 +123,9 @@ body{
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.6); border-radius:22px;
   box-shadow:0 18px 50px rgba(21,60,120,.16);
-  padding:clamp(14px,2.2vh,22px) clamp(12px,2.2vw,30px);
+  /* 垂直内边距下限 20px：为「浦外」角标预留随大标题一同上浮的行程空间
+     （角标浮动顶点须始终收在白框内沿之内；vh≥909px 时取值不变，仅较矮视口略增头部空间） */
+  padding:clamp(20px,2.2vh,22px) clamp(12px,2.2vw,30px);
 }
 /* 大标题：小学生手写字体 + 紫渐变（图2色调）+ 高光扫过 + 动态渐变 + 微浮动 */
 .title{
@@ -153,24 +155,26 @@ body{
   0%,100%{background-position:100% 50%, 0% 45%;}
   50%{background-position:0% 50%, 100% 55%;}
 }
-/* 「浦外」角标：悬于「师」「多」二字正上方（2026-10-15 新增，当晚两轮改版）
+/* 「浦外」角标：悬于「师」「多」二字正上方（2026-10-15 新增，当晚三轮改版）
    - 字号 = 大标题的 2/9（.22em：在 1/3 基础上再缩 1/3，相对父级字号，随 clamp 自适应）
    - 外框 = 滚动标语同款橙渐变 + 高光流光（双图层 + titleSheen，颜色与特效全同标语）
    - 框内填充 = 导航页背景图同款水色渐变（运行时 JS 采样当前底图，见 sampleBadgeFill）
    - 框内字 = 滚动标语同款橙渐变 + 高光扫过（不滚动）
+   - 浮动 = 与大标题同一套 titleFloat（同曲线/同时长 10.4s，只上浮不下沉），
+     延迟取「师」「多」二字波浪相位的正中（JS 设 1.12s），随波浪一同起伏
    - 定位（placeBadge 运行时精确设置，此处仅为兜底）：
-     水平居中于「师」「多」墨迹间隙中点；垂直贴「大标题边框」（headBlock 白框）
-     内沿一丝——不压框线；已计入标题浮动 ±10px 行程，任何相位不压字 */
+     水平居中于「师」「多」墨迹间隙中点；垂直布局位 = 白框内沿 + 上浮行程(10px)
+     + 2px——浮动顶点仍收在框内一丝；与二字墨迹同相浮动，相对间隙恒定（≥3px） */
 .title > span{position:relative;}   /* 保留：span 层叠基准（角标已移出单字，不再依赖） */
 .titleBadge{
-  position:absolute; left:50%; top:-16px; z-index:2;
+  position:absolute; left:50%; top:-8px; z-index:2;
   font-size:.22em; line-height:1; font-weight:800; letter-spacing:.05em;
   padding:.12em; border-radius:.44em; pointer-events:none;
   background-image:
     linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 58%),
     linear-gradient(115deg, #FFE8CC 0%, #FDBA74 20%, #FB923C 42%, #F97316 60%, #EA580C 78%, #FDBA74 100%);
   background-size:300% 100%, 220% 220%;
-  animation:titleSheen 6.5s ease-in-out infinite;
+  animation:titleFloat 10.4s ease-in-out infinite, titleSheen 6.5s ease-in-out infinite;
 }
 .titleBadge i{
   display:block; font-style:normal;
@@ -630,8 +634,9 @@ body{
      框内填充=背景图水色（JS 采样），框内字=标语橙渐变，均不滚动）。
      三层结构：.titleBadge=框 / i=填充 / i>span=字（渐变裁字须独占元素，
      故内层用 span 并已将标题 glyph 规则收紧为 .title > span，互不污染）。
-     2026-10-15 晚改版：徽章挂 .title 直接子元素（不随单字浮动，几何恒定），
-     由 placeBadge() 按墨迹实测常数精确定位（见下方函数）。 */
+     2026-10-15 晚改版：徽章挂 .title 直接子元素，由 placeBadge() 按墨迹实测常数
+     精确定位；浮动用与大标题同一套 titleFloat，延迟取「师」(0.96s/1.35s) 与
+     「多」(1.28s/1.8s) 波浪相位的正中 1.12s/1.575s——随波浪一同起伏。 */
   var shiSpan = null;
   Array.prototype.forEach.call(title.children, function(s){
     if(!shiSpan && s.textContent === '师') shiSpan = s;
@@ -640,14 +645,17 @@ body{
     var badge = document.createElement('b');
     badge.className = 'titleBadge';
     badge.innerHTML = '<i><span>浦外</span></i>';
+    badge.style.animationDelay = '1.12s, 1.575s';  /* 师/多波浪相位正中：与二字同相起伏 */
     title.appendChild(badge);
   }
 
   /* 角标定位（placeBadge）：
      水平中心 = 「师」墨迹右缘 与「多」墨迹左缘 的中点（二字正中间）；
-     垂直顶 = headBlock 白框内沿 + 4px 呼吸（贴框一丝，不压框线）；
-     防压字：底边 ≤ 两字覆盖区最高墨迹顶（含「多」字左上撇，span 内 y17）
-     − 浮动行程(10px) − 间隙(3px)，若贴框会导致压字则自动让位（优先不压字）。
+     垂直布局位 = headBlock 白框内沿 + 上浮行程(10px) + 2px——角标与大标题同相浮动
+     （titleFloat 只上浮不下沉），浮动顶点仍收在框内一丝，不压框线；
+     防压字：角标与二字墨迹同相浮动（延迟取相位正中，漂移 ≤0.5px），相对几何恒定，
+     底边 ≤ 两字覆盖区最高墨迹顶（含「多」字左上撇，span 内 y17）− 间隙(3px) 即可，
+     若仍会导致压字则自动让位（优先不压字）。
      墨迹常数 = 66px 字号实测折算的 em 比例（同一手写子集字体，随 clamp 自适应）。 */
   function placeBadge(){
     var badge = document.querySelector('.titleBadge');
@@ -664,26 +672,27 @@ body{
     var INK_LEFT_DUO  = 0.227 * fs;  /* 多墨迹左缘（span 内 x15/66） */
     var INK_TOP_SHI   = 0.500 * fs;  /* 师字覆盖区最高墨迹顶（span 内 y33/66） */
     var INK_TOP_DUO   = 0.258 * fs;  /* 多字覆盖区最高墨迹顶（span 内 y17/66，左上撇） */
-    var FRAME_GAP = 4;               /* 角标顶距白框内沿的呼吸 */
-    var FLOAT_Y   = 10;              /* titleFloat 垂直行程 */
-    var INK_GAP   = 3;               /* 角标底与浮动最高相位墨迹顶的间隙 */
+    var FLOAT_UP  = 10;              /* titleFloat 上浮行程（角标与大字同相浮动，只上不下） */
+    var FRAME_GAP = 2;               /* 角标浮动顶点距白框内沿的呼吸（贴框一丝，不压框线） */
+    var INK_GAP   = 3;               /* 角标底与墨迹顶的间隙（同相浮动，相对几何恒定） */
     var cx = ((shi.offsetLeft + INK_RIGHT_SHI) + (duo.offsetLeft + INK_LEFT_DUO)) / 2;
     var hb = document.querySelector('.headBlock');
     var titleRect = title.getBoundingClientRect();
     var top;
     if(hb){
       var hbBorder = parseFloat(getComputedStyle(hb).borderTopWidth) || 1;
-      top = (hb.getBoundingClientRect().top + hbBorder + FRAME_GAP) - titleRect.top;
+      top = (hb.getBoundingClientRect().top + hbBorder + FLOAT_UP + FRAME_GAP) - titleRect.top;
     }else{
-      top = -16;
+      top = -8;
     }
     badge.style.top = top + 'px';
     var bw = badge.offsetWidth, bh = badge.offsetHeight;
     badge.style.left = (cx - bw / 2) + 'px';
-    /* 防压字校验：任何相位底边不得侵入两字覆盖区最高墨迹（取师/多较小者） */
+    /* 防压字校验：任何相位底边不得侵入两字覆盖区最高墨迹（取师/多较小者）。
+       角标与字同相浮动 ⇒ 无需再预留浮动行程，仅留 3px 间隙（含邻字 0.32s 相位差漂移） */
     var inkTop = Math.min(titleRect.top + shi.offsetTop + INK_TOP_SHI,
                           titleRect.top + duo.offsetTop + INK_TOP_DUO);
-    var limit  = inkTop - FLOAT_Y - INK_GAP;
+    var limit  = inkTop - INK_GAP;
     var bottom = titleRect.top + top + bh;
     if(bottom > limit){
       top = limit - titleRect.top - bh;
@@ -989,16 +998,22 @@ body{
       img.onload = function(){
         if(seq !== fillSeq) return;   /* 只认最后一次采样，防连切背景时竞争 */
         try{
-          var br = badge.getBoundingClientRect();
+          /* 用布局坐标（offsetLeft/Top）而非 getBoundingClientRect：
+             角标随大标题一同浮动，rect 含浮动位移会使采样区随相位上下漂移；
+             布局坐标恒定，填充色只取决于底图与版面，与浮动相位无关 */
+          var tR = title.getBoundingClientRect();
+          var vbL = tR.left  + badge.offsetLeft;
+          var vbT = tR.top   + badge.offsetTop;
+          var vbW = badge.offsetWidth, vbH = badge.offsetHeight;
           var ar = art.getBoundingClientRect();
-          if(br.width < 4 || ar.width < 4 || ar.height < 4) return;
+          if(vbW < 4 || ar.width < 4 || ar.height < 4) return;
           var kx = img.naturalWidth / ar.width;
           var ky = img.naturalHeight / ar.height;
-          var ex = br.width * .7, ey = br.height * .7;
-          var x0 = Math.max(0, Math.floor((br.left  - ex) * kx));
-          var y0 = Math.max(0, Math.floor((br.top   - ey) * ky));
-          var x1 = Math.min(img.naturalWidth,  Math.ceil((br.right  + ex) * kx));
-          var y1 = Math.min(img.naturalHeight, Math.ceil((br.bottom + ey) * ky));
+          var ex = vbW * .7, ey = vbH * .7;
+          var x0 = Math.max(0, Math.floor((vbL      - ex) * kx));
+          var y0 = Math.max(0, Math.floor((vbT      - ey) * ky));
+          var x1 = Math.min(img.naturalWidth,  Math.ceil((vbL + vbW + ex) * kx));
+          var y1 = Math.min(img.naturalHeight, Math.ceil((vbT + vbH + ey) * ky));
           var w = x1 - x0, h = y1 - y0;
           if(w < 2 || h < 2) return;
           var c = document.createElement('canvas');
