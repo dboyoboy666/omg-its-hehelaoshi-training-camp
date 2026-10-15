@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261015-1545">
+<meta name="build" content="NAV-20261015-1645">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -152,6 +152,35 @@ body{
   0%,100%{background-position:100% 50%, 0% 45%;}
   50%{background-position:0% 50%, 100% 55%;}
 }
+/* 「浦外」角标：缀在「师」字右上角（2026-10-15 新增）
+   - 字号 = 大标题的 1/3（.33em 相对父级字号，随 clamp 自适应）
+   - 字色/流光 = 滚动标语同款橙渐变 + 高光扫过（复用 titleSheen），但不滚动
+   - 外框 = 流动渐变描边：双循环渐变 + background-position 漂移，
+     动态节奏仿大标题高光扫过；无缝循环（一循环宽度 = 一容器宽） */
+.title > span{position:relative;}   /* 角标定位基准（不干扰既有浮动动画） */
+.titleBadge{
+  position:absolute; top:-.26em; right:-.42em; z-index:2;
+  font-size:.33em; line-height:1; font-weight:800; letter-spacing:.05em;
+  padding:.14em; border-radius:.42em; pointer-events:none;
+  background:linear-gradient(90deg,
+    #FFE8CC,#FDBA74,#FB923C,#F97316,#EA580C,#F97316,#FB923C,#FDBA74,
+    #FFE8CC,#FDBA74,#FB923C,#F97316,#EA580C,#F97316,#FB923C,#FDBA74,#FFE8CC);
+  background-size:200% 100%;
+  animation:badgeFlow 3.4s linear infinite;
+}
+.titleBadge i{
+  display:block; font-style:normal;
+  padding:.08em .24em .14em; border-radius:.3em;
+  background:rgba(255,255,255,.93);
+  background-image:
+    linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(115deg, #FFE8CC 0%, #FDBA74 20%, #FB923C 42%, #F97316 60%, #EA580C 78%, #FDBA74 100%);
+  background-size:300% 100%, 220% 220%;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  animation:titleSheen 6.5s ease-in-out infinite;
+}
+@keyframes badgeFlow{from{background-position:0% 50%;}to{background-position:100% 50%;}}
 
 /* 第二行：环绕接力式播送带（复刻课件「何何老师@PFLS」滚动规则，反向播放）——
    结构复刻课件封面：orbitRun 宽 200%，每副本宽 50%（= 一整带宽），
@@ -358,31 +387,47 @@ body{
 #bgBtn .bgBtnIcon{font-size:17px; line-height:1;}
 #bgPanel{
   position:fixed; top:64px; right:18px; z-index:1200; width:272px;
-  border:1.5px solid rgba(255,255,255,.7); border-radius:16px;
-  background:rgba(255,255,255,.85);
+  border:1.5px solid rgba(255,255,255,.78); border-radius:16px;
+  /* 面板底色 = 功能卡同款渐变紫（动态流动，复刻 cardFlow 节奏）——2026-10-15 去白底 */
+  background:linear-gradient(115deg,
+    rgba(237,233,254,.66) 0%, rgba(196,181,253,.56) 22%, rgba(167,139,250,.50) 45%,
+    rgba(99,102,241,.46) 68%, rgba(165,180,252,.60) 100%);
+  background-size:200% 100%;
+  animation:cardFlow 8.5s ease-in-out infinite alternate;
   -webkit-backdrop-filter:blur(16px) saturate(1.2); backdrop-filter:blur(16px) saturate(1.2);
   box-shadow:0 14px 44px rgba(22,50,79,.22);
   padding:14px; display:none;
+  max-height:calc(100vh - 84px); overflow-y:auto; /* 特效项增多后面板不自爆视口 */
 }
 #bgPanel.open{display:block; animation:bgPanelIn .28s ease;}
 @keyframes bgPanelIn{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:none;}}
 #bgPanel h3{font-size:14px; color:var(--ink); margin-bottom:10px; letter-spacing:.04em;}
 #bgLockRow{display:flex; gap:8px;}
+/* 密钥框 + 解锁按钮：复刻课件「何何老师@PFLS」彩蛋口令窗风格
+   （深底金字 / 2px 金框 / 楷体 / 宽字距居中——与课件 #eggIn #eggGo 同款，
+    源：趣味游戏互动HTML课件集/…-V3.2.html 第 484-495 行） */
 #bgPwd{
-  flex:1; min-width:0; box-sizing:border-box; padding:8px 11px; font-size:13px; letter-spacing:.18em;
-  border:1.5px solid rgba(59,130,246,.4); border-radius:9px; outline:none;
-  background:rgba(255,255,255,.9); color:var(--ink);
+  flex:1; min-width:0; box-sizing:border-box;
+  padding:10px 12px; font-size:15px; font-weight:700; letter-spacing:.25em; text-align:center;
+  border:2px solid #c9a227; border-radius:14px; outline:none;
+  background:rgba(20,16,10,.92); color:#e8c96a;
+  font-family:"STKaiti","Kaiti SC",KaiTi,serif;
+  transition:box-shadow .2s;
 }
-#bgPwd:focus{border-color:var(--blue);}
-#bgPwd.bad{border-color:#dc2626; animation:bgShake .38s;}
+#bgPwd::placeholder{color:rgba(232,202,106,.45); font-weight:400; letter-spacing:.05em;}
+#bgPwd:focus{box-shadow:0 0 0 3px rgba(232,201,106,.22);}
+#bgPwd.bad{border-color:#b03a2e; animation:bgShake .38s;}
 @keyframes bgShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 #bgUnlock{
-  padding:8px 14px; font-size:13px; font-weight:700; color:#fff; letter-spacing:.1em;
-  background:linear-gradient(180deg,#60a5fa,#2563eb); border:none; border-radius:9px; cursor:pointer;
+  flex:none; height:45px; padding:0 15px;
+  font-family:"STKaiti","Kaiti SC",KaiTi,serif;
+  font-size:16px; font-weight:900; letter-spacing:.1em; color:#e8c96a;
+  background:rgba(20,16,10,.92); border:2px solid #c9a227; border-radius:14px; cursor:pointer;
+  transition:background .2s;
 }
-#bgUnlock:hover{filter:brightness(1.08);}
+#bgUnlock:hover{background:rgba(201,162,39,.22);}
 #bgUnlock:disabled{opacity:.55; cursor:default;}
-#bgErr{height:16px; margin-top:6px; font-size:11.5px; color:#dc2626;}
+#bgErr{height:16px; margin-top:6px; font-size:11.5px; font-weight:600; color:#b03a2e;}
 #bgList{margin-top:10px; display:none; flex-direction:column; gap:7px;}
 #bgList.on{display:flex;}
 .bgItem{
@@ -416,6 +461,25 @@ body{
   font-size:12.5px; color:var(--ink); cursor:pointer; user-select:none;
 }
 #bgStretch{width:16px; height:16px; accent-color:var(--blue-deep); cursor:pointer;}
+/* ---- 网页动态特效子菜单：多选叠加，可全关（注册表驱动，见 JS FX 数组） ---- */
+#fxSec{margin-top:11px; padding-top:11px; border-top:1px dashed rgba(99,102,241,.3); display:none;}
+#fxSec.on{display:block;}
+.fxTitle{font-size:13px; font-weight:800; color:var(--ink); letter-spacing:.04em;}
+.fxTip{font-size:11px; color:var(--ink-soft); margin:2px 0 8px;}
+#fxList{display:flex; flex-direction:column; gap:7px;}
+.fxItem{
+  display:flex; align-items:center; gap:9px; padding:7px 9px;
+  border:1.5px solid rgba(99,102,241,.22); border-radius:10px; cursor:pointer;
+  background:rgba(255,255,255,.55); transition:border-color .2s, background .2s;
+  font-size:12.5px; font-weight:600; color:var(--ink); user-select:none;
+}
+.fxItem:hover{border-color:#7c3aed; background:rgba(255,255,255,.85);}
+.fxItem.on{border-color:#6d28d9; background:rgba(124,58,237,.14);}
+.fxItem input{width:16px; height:16px; accent-color:#6d28d9; cursor:pointer; flex:none; margin:0;}
+.fxItem .fxDef{
+  margin-left:auto; flex:none; font-size:10px; font-weight:700; color:#fff; letter-spacing:.05em;
+  background:linear-gradient(90deg,#7C3AED,#6366F1); padding:2px 8px; border-radius:999px;
+}
 @media (max-width:480px){
   #bgBtn{width:34px; height:34px; padding:0;}
   #bgPanel{width:calc(100vw - 36px);}
@@ -433,20 +497,21 @@ body{
   <div class="bgArt"></div>
   <div class="bgSeam"></div>
   <div class="ripples">
-    <!-- 猫身周围 3 个中心点（对齐原画涟漪位置），各自多环向外荡漾 -->
+    <!-- 猫身周围 3 个中心点（对齐原画涟漪位置），各自多环向外荡漾；
+         2026-10-15：两组同径同心圆的触发间隔减半（3.3s→1.65s 量级），涟漪更密 -->
     <span class="rpCore" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--d:0s;"></span>
     <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--o:.42;--b:6px;--d:0s;   --dur:10s;"></span>
-    <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--o:.34;--b:7px;--d:3.3s; --dur:10s;"></span>
+    <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:34vw;--o:.34;--b:7px;--d:1.65s;--dur:10s;"></span>
     <span class="rp" style="--x:70%;--y:calc(var(--art-h) * .52);--w:52vw;--o:.22;--b:9px;--d:6.6s; --dur:13s;"></span>
 
     <span class="rpCore" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--d:1.2s;"></span>
     <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--o:.40;--b:6px;--d:.9s;  --dur:9.5s;"></span>
-    <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--o:.32;--b:7px;--d:4.1s; --dur:9.5s;"></span>
+    <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:30vw;--o:.32;--b:7px;--d:2.5s; --dur:9.5s;"></span>
     <span class="rp" style="--x:62%;--y:calc(var(--art-h) * .64);--w:46vw;--o:.20;--b:9px;--d:7.6s; --dur:12.5s;"></span>
 
     <span class="rpCore" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--d:2.4s;"></span>
     <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--o:.40;--b:6px;--d:1.8s; --dur:10.5s;"></span>
-    <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--o:.32;--b:7px;--d:5.2s; --dur:10.5s;"></span>
+    <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:30vw;--o:.32;--b:7px;--d:3.5s; --dur:10.5s;"></span>
     <span class="rp" style="--x:78%;--y:calc(var(--art-h) * .50);--w:48vw;--o:.20;--b:9px;--d:8.6s; --dur:13.5s;"></span>
 
     <!-- 衍展区的 2 个中心点（图6/图7 卡片位周边）：与猫身同款多环叠加套装 -->
@@ -525,6 +590,11 @@ body{
   </div>
   <div id="bgErr"></div>
   <div id="bgList"></div>
+  <div id="fxSec">
+    <div class="fxTitle">网页动态特效</div>
+    <div class="fxTip">可勾选多个特效叠加，也可全部关闭</div>
+    <div id="fxList"></div>
+  </div>
   <div id="bgOps">
     <button id="bgImportBtn" type="button">＋ 导入本地图片</button>
     <input id="bgFile" type="file" accept="image/*" hidden>
@@ -546,6 +616,19 @@ body{
     s.style.animationDelay = (i * 0.32) + 's, ' + (i * 0.45) + 's';
     title.appendChild(s);
   });
+
+  /* 「浦外」角标：缀在「师」字右上角（字号=大标题 1/3；橙渐变字 + 流光边框，不滚动）。
+     用 <b> 而非 <span>：避开 .title span 的渐变裁字/浮动动画规则，角标样式独立 */
+  var shiSpan = null;
+  Array.prototype.forEach.call(title.children, function(s){
+    if(!shiSpan && s.textContent === '师') shiSpan = s;
+  });
+  if(shiSpan){
+    var badge = document.createElement('b');
+    badge.className = 'titleBadge';
+    badge.innerHTML = '<i>浦外</i>';
+    shiSpan.appendChild(badge);
+  }
 
   /* ---------- 播送带：字号按带宽收紧（完整句子一趟可见）+ 时长按 28.4px/s ---------- */
   var orbitBox = document.querySelector('.orbit');
@@ -747,7 +830,7 @@ body{
 
   /* ---------- 背景切换器：密钥解锁 + 切换/导入/删除 + 智能拉伸 ---------- */
   (function(){
-    var KEY = 'zyzwz2026';
+    var KEY = 'zyywz2026';
     var LS = 'hehe-bg-switch-v1';
     var builtin = [
       { id:'bg.jpg',  name:'蓝白水彩 · 高清原图' },
@@ -777,6 +860,8 @@ body{
     var ops     = document.getElementById('bgOps');
     var file    = document.getElementById('bgFile');
     var stretch = document.getElementById('bgStretch');
+    var fxSec   = document.getElementById('fxSec');
+    var fxList  = document.getElementById('fxList');
 
     function persist(){
       try{ localStorage.setItem(LS, JSON.stringify(state)); return true; }
@@ -816,6 +901,64 @@ body{
       }
     }
     function isCustom(id){ return state.custom.some(function(c){ return c.id === id; }); }
+
+    /* ---------- 网页动态特效：注册表驱动（多选叠加 / 可全关） ----------
+       新增特效三步：① 在 .bg 背景栈里加一个效果层（如 <div class="fxXxx"></div>）；
+       ② 在下方 FX 数组登记 { id, name, layer, def }；③ 收工——面板自动长出勾选项。
+       各特效层独立显隐 ⇒ 支持多选叠加；全部不勾 = 回到纯静态背景。
+       偏好存 localStorage 'hehe-fx-switch-v1'（与背景偏好 'hehe-bg-switch-v1' 分开，互不污染）。 */
+    var FXS_KEY = 'hehe-fx-switch-v1';
+    var FX = [
+      { id:'ripple', name:'水面涟漪', layer:'.ripples', def:true }
+    ];
+    var fxOn = FX.filter(function(f){ return f.def; }).map(function(f){ return f.id; });
+    try{
+      var fxsRaw = JSON.parse(localStorage.getItem(FXS_KEY) || 'null');
+      if(Array.isArray(fxsRaw)){
+        fxOn = fxsRaw.filter(function(id){ return FX.some(function(f){ return f.id === id; }); });
+      }
+    }catch(e){}
+    function persistFx(){
+      try{ localStorage.setItem(FXS_KEY, JSON.stringify(fxOn)); return true; }
+      catch(e){ return false; }
+    }
+    function applyFx(){
+      FX.forEach(function(f){
+        var el = document.querySelector(f.layer);
+        if(el) el.style.display = (fxOn.indexOf(f.id) > -1) ? '' : 'none';
+      });
+    }
+    function renderFx(){
+      if(!fxList) return;
+      fxList.innerHTML = '';
+      FX.forEach(function(f){
+        var on = fxOn.indexOf(f.id) > -1;
+        var lab = document.createElement('label');
+        lab.className = 'fxItem' + (on ? ' on' : '');
+        var cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.checked = on;
+        cb.addEventListener('change', function(){
+          var i = fxOn.indexOf(f.id);
+          if(cb.checked && i < 0) fxOn.push(f.id);
+          if(!cb.checked && i > -1) fxOn.splice(i, 1);
+          if(!persistFx()) toast('浏览器存储空间不足，特效偏好未保存');
+          applyFx();
+          lab.classList.toggle('on', cb.checked);
+          var onNames = FX.filter(function(x){ return fxOn.indexOf(x.id) > -1; })
+                          .map(function(x){ return x.name; });
+          toast(onNames.length ? '特效已更新：' + onNames.join('＋') : '已关闭全部动态特效');
+        });
+        var nm = document.createElement('span');
+        nm.textContent = f.name;
+        lab.appendChild(cb); lab.appendChild(nm);
+        if(f.def){
+          var tag = document.createElement('span');
+          tag.className = 'fxDef'; tag.textContent = '默认';
+          lab.appendChild(tag);
+        }
+        fxList.appendChild(lab);
+      });
+    }
 
     function render(){
       list.innerHTML = '';
@@ -860,9 +1003,9 @@ body{
       var v = (pwd.value || '').trim();
       if(v === KEY){
         err.textContent = '';
-        list.classList.add('on'); ops.classList.add('on');
+        list.classList.add('on'); ops.classList.add('on'); fxSec.classList.add('on');
         pwd.disabled = true; unlockB.disabled = true; unlockB.textContent = '已解锁';
-        render();
+        render(); renderFx();
         toast('背景管理已解锁');
       }else{
         err.textContent = '密钥不对，请重试';
@@ -935,9 +1078,10 @@ body{
       panel.classList.remove('open');
     });
 
-    /* 初始化：恢复上次选择与拉伸偏好 */
+    /* 初始化：恢复上次选择与拉伸偏好 + 特效开关 */
     applyBg(state.active);
     applyStretch(state.stretch);
+    applyFx();
   })();
 
   render();
