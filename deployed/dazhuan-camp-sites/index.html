@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261015-1645">
+<meta name="build" content="NAV-20261015-2012">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -132,7 +132,7 @@ body{
   white-space:nowrap; letter-spacing:.04em; line-height:1.32;
   padding:0 8px; /* 容纳浮动位移，避免裁切 */
 }
-.title span{
+.title > span{
   display:inline-block;
   background-image:
     linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.92) 50%, rgba(255,255,255,0) 58%),
@@ -152,26 +152,32 @@ body{
   0%,100%{background-position:100% 50%, 0% 45%;}
   50%{background-position:0% 50%, 100% 55%;}
 }
-/* 「浦外」角标：缀在「师」字右上角（2026-10-15 新增）
+/* 「浦外」角标：缀在「师」字右上角（2026-10-15 新增，当晚按反馈改版）
    - 字号 = 大标题的 1/3（.33em 相对父级字号，随 clamp 自适应）
-   - 字色/流光 = 滚动标语同款橙渐变 + 高光扫过（复用 titleSheen），但不滚动
-   - 外框 = 流动渐变描边：双循环渐变 + background-position 漂移，
-     动态节奏仿大标题高光扫过；无缝循环（一循环宽度 = 一容器宽） */
+   - 外框 = 滚动标语同款橙渐变 + 高光流光（双图层 + titleSheen，颜色与特效全同标语）
+   - 框内填充 = 导航页背景图同款水色渐变（运行时 JS 采样当前底图，见 sampleBadgeFill）
+   - 框内字 = 滚动标语同款橙渐变 + 高光扫过（不滚动）
+   - 定位：整体上移，与下方大标题全部文字保持一丝上下平行的微小间隙（不压字）；
+     上移量已计入标题浮动 ±10px 的行程，任何时刻不遮挡任何字 */
 .title > span{position:relative;}   /* 角标定位基准（不干扰既有浮动动画） */
 .titleBadge{
-  position:absolute; top:-.26em; right:-.42em; z-index:2;
+  position:absolute; top:-1.13em; right:-.42em; z-index:2;
   font-size:.33em; line-height:1; font-weight:800; letter-spacing:.05em;
-  padding:.14em; border-radius:.42em; pointer-events:none;
-  background:linear-gradient(90deg,
-    #FFE8CC,#FDBA74,#FB923C,#F97316,#EA580C,#F97316,#FB923C,#FDBA74,
-    #FFE8CC,#FDBA74,#FB923C,#F97316,#EA580C,#F97316,#FB923C,#FDBA74,#FFE8CC);
-  background-size:200% 100%;
-  animation:badgeFlow 3.4s linear infinite;
+  padding:.12em; border-radius:.44em; pointer-events:none;
+  background-image:
+    linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(115deg, #FFE8CC 0%, #FDBA74 20%, #FB923C 42%, #F97316 60%, #EA580C 78%, #FDBA74 100%);
+  background-size:300% 100%, 220% 220%;
+  animation:titleSheen 6.5s ease-in-out infinite;
 }
 .titleBadge i{
   display:block; font-style:normal;
-  padding:.08em .24em .14em; border-radius:.3em;
-  background:rgba(255,255,255,.93);
+  padding:.08em .22em .13em; border-radius:.32em;
+  /* 兜底填充 = 图1 标题区水色竖向渐变；运行时被 sampleBadgeFill 的采样结果覆盖 */
+  background-image:linear-gradient(180deg,#bcd9f7 0%,#a5cdf2 55%,#8dbdee 100%);
+}
+.titleBadge i span{
+  display:block;
   background-image:
     linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 58%),
     linear-gradient(115deg, #FFE8CC 0%, #FDBA74 20%, #FB923C 42%, #F97316 60%, #EA580C 78%, #FDBA74 100%);
@@ -180,7 +186,6 @@ body{
   color:transparent; -webkit-text-fill-color:transparent;
   animation:titleSheen 6.5s ease-in-out infinite;
 }
-@keyframes badgeFlow{from{background-position:0% 50%;}to{background-position:100% 50%;}}
 
 /* 第二行：环绕接力式播送带（复刻课件「何何老师@PFLS」滚动规则，反向播放）——
    结构复刻课件封面：orbitRun 宽 200%，每副本宽 50%（= 一整带宽），
@@ -386,7 +391,7 @@ body{
 #bgBtn:hover{transform:translateY(-2px); background:rgba(255,255,255,.62); box-shadow:0 8px 24px rgba(22,50,79,.2);}
 #bgBtn .bgBtnIcon{font-size:17px; line-height:1;}
 #bgPanel{
-  position:fixed; top:64px; right:18px; z-index:1200; width:272px;
+  position:fixed; top:64px; right:18px; z-index:1200; width:288px;
   border:1.5px solid rgba(255,255,255,.78); border-radius:16px;
   /* 面板底色 = 功能卡同款渐变紫（动态流动，复刻 cardFlow 节奏）——2026-10-15 去白底 */
   background:linear-gradient(115deg,
@@ -402,13 +407,14 @@ body{
 #bgPanel.open{display:block; animation:bgPanelIn .28s ease;}
 @keyframes bgPanelIn{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:none;}}
 #bgPanel h3{font-size:14px; color:var(--ink); margin-bottom:10px; letter-spacing:.04em;}
-#bgLockRow{display:flex; gap:8px;}
-/* 密钥框 + 解锁按钮：复刻课件「何何老师@PFLS」彩蛋口令窗风格
-   （深底金字 / 2px 金框 / 楷体 / 宽字距居中——与课件 #eggIn #eggGo 同款，
-    源：趣味游戏互动HTML课件集/…-V3.2.html 第 484-495 行） */
+#bgLockRow{display:flex; align-items:center; gap:10px;}
+/* 密钥框 + 解锁按钮：与课件「何何老师@PFLS」彩蛋口令窗（图2）完全一致风格
+   （深底 rgba(20,16,10,.92) / 2px 金框 #c9a227 / 金字 #e8c96a / 楷体 / 宽字距居中 /
+    focus 金晕 / 错钥抖+红框 #b03a2e；按钮为 46×46 圆角方钮，内为向右箭头 ➜）
+   源：趣味游戏互动HTML课件集/…-V3.2.html 第 484-495 行 #eggIn/#eggGo */
 #bgPwd{
   flex:1; min-width:0; box-sizing:border-box;
-  padding:10px 12px; font-size:15px; font-weight:700; letter-spacing:.25em; text-align:center;
+  padding:11px 12px; font-size:17px; font-weight:700; letter-spacing:.3em; text-align:center;
   border:2px solid #c9a227; border-radius:14px; outline:none;
   background:rgba(20,16,10,.92); color:#e8c96a;
   font-family:"STKaiti","Kaiti SC",KaiTi,serif;
@@ -419,9 +425,10 @@ body{
 #bgPwd.bad{border-color:#b03a2e; animation:bgShake .38s;}
 @keyframes bgShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 #bgUnlock{
-  flex:none; height:45px; padding:0 15px;
+  flex:none; width:46px; height:46px; padding:0;
+  display:flex; align-items:center; justify-content:center;
   font-family:"STKaiti","Kaiti SC",KaiTi,serif;
-  font-size:16px; font-weight:900; letter-spacing:.1em; color:#e8c96a;
+  font-size:20px; font-weight:900; line-height:1; color:#e8c96a;
   background:rgba(20,16,10,.92); border:2px solid #c9a227; border-radius:14px; cursor:pointer;
   transition:background .2s;
 }
@@ -586,7 +593,7 @@ body{
 <div id="bgPanel" role="dialog" aria-label="背景图片管理">
   <div id="bgLockRow">
     <input id="bgPwd" type="password" placeholder="请输入密钥" autocomplete="off">
-    <button id="bgUnlock" type="button">解锁</button>
+    <button id="bgUnlock" type="button" title="解锁">➜</button>
   </div>
   <div id="bgErr"></div>
   <div id="bgList"></div>
@@ -617,8 +624,10 @@ body{
     title.appendChild(s);
   });
 
-  /* 「浦外」角标：缀在「师」字右上角（字号=大标题 1/3；橙渐变字 + 流光边框，不滚动）。
-     用 <b> 而非 <span>：避开 .title span 的渐变裁字/浮动动画规则，角标样式独立 */
+  /* 「浦外」角标：缀在「师」字右上角（字号=大标题 1/3；外框=标语橙渐变流光，
+     框内填充=背景图水色（JS 采样），框内字=标语橙渐变，均不滚动）。
+     三层结构：.titleBadge=框 / i=填充 / i>span=字（渐变裁字须独占元素，
+     故内层用 span 并已将标题 glyph 规则收紧为 .title > span，互不污染） */
   var shiSpan = null;
   Array.prototype.forEach.call(title.children, function(s){
     if(!shiSpan && s.textContent === '师') shiSpan = s;
@@ -626,7 +635,7 @@ body{
   if(shiSpan){
     var badge = document.createElement('b');
     badge.className = 'titleBadge';
-    badge.innerHTML = '<i>浦外</i>';
+    badge.innerHTML = '<i><span>浦外</span></i>';
     shiSpan.appendChild(badge);
   }
 
@@ -882,6 +891,7 @@ body{
           cat.style.display = 'none';
         }
       }
+      sampleBadgeFill(url);   /* 角标填充色跟随底图重采 */
     }
     function applyStretch(on){
       var art = document.querySelector('.bgArt');
@@ -899,8 +909,67 @@ body{
         if(seam) seam.style.display = '';
         if(cat){ cat.style.height = ''; cat.style.backgroundSize = ''; }
       }
+      sampleBadgeFill(state.active);   /* 拉伸改变底图几何映射，重采角标填充色 */
     }
     function isCustom(id){ return state.custom.some(function(c){ return c.id === id; }); }
+
+    /* ---------- 「浦外」角标填充色 = 当前背景图同款水色（动态采样） ----------
+       角标坐落在标题区上方，该处背景即水面/天空；用 canvas 采样当前底图在
+       角标身后区域（box 外扩 70%）的颜色，上/中/下三段均色生成竖向渐变
+       （上提亮 10%、下压暗 10% 形成可见渐变，色相仍取底图同款），
+       切换/导入背景、开关拉伸、视口变化后自动重采；
+       采样失败（画布被污染等）时保留 CSS 兜底渐变（图1 水色）。 */
+    var fillSeq = 0;
+    function sampleBadgeFill(url){
+      var badge = document.querySelector('.titleBadge');
+      var box = badge && badge.querySelector('i');
+      var art = document.querySelector('.bgArt');
+      if(!badge || !box || !art || !url) return;
+      var seq = ++fillSeq;
+      var img = new Image();
+      img.onload = function(){
+        if(seq !== fillSeq) return;   /* 只认最后一次采样，防连切背景时竞争 */
+        try{
+          var br = badge.getBoundingClientRect();
+          var ar = art.getBoundingClientRect();
+          if(br.width < 4 || ar.width < 4 || ar.height < 4) return;
+          var kx = img.naturalWidth / ar.width;
+          var ky = img.naturalHeight / ar.height;
+          var ex = br.width * .7, ey = br.height * .7;
+          var x0 = Math.max(0, Math.floor((br.left  - ex) * kx));
+          var y0 = Math.max(0, Math.floor((br.top   - ey) * ky));
+          var x1 = Math.min(img.naturalWidth,  Math.ceil((br.right  + ex) * kx));
+          var y1 = Math.min(img.naturalHeight, Math.ceil((br.bottom + ey) * ky));
+          var w = x1 - x0, h = y1 - y0;
+          if(w < 2 || h < 2) return;
+          var c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          var ctx = c.getContext('2d');
+          ctx.drawImage(img, x0, y0, w, h, 0, 0, w, h);
+          var d = ctx.getImageData(0, 0, w, h).data;
+          function avg(ya, yb){
+            var r = 0, g = 0, b = 0, n = 0;
+            var ys = Math.max(0, Math.floor(ya)), ye = Math.min(h, Math.floor(yb));
+            for(var y = ys; y < ye; y++) for(var x = 0; x < w; x++){
+              var i = (y * w + x) * 4;
+              r += d[i]; g += d[i+1]; b += d[i+2]; n++;
+            }
+            return n ? [r/n, g/n, b/n] : null;
+          }
+          var top = avg(0, h/3), mid = avg(h/3, h*2/3), bot = avg(h*2/3, h);
+          if(!top || !mid || !bot) return;
+          function css(col, f){
+            return 'rgb(' + Math.round(Math.min(255, col[0]*f)) + ',' +
+                              Math.round(Math.min(255, col[1]*f)) + ',' +
+                              Math.round(Math.min(255, col[2]*f)) + ')';
+          }
+          box.style.backgroundImage = 'linear-gradient(180deg,' +
+            css(top, 1.10) + ' 0%,' + css(mid, 1) + ' 52%,' + css(bot, .90) + ' 100%)';
+        }catch(e){ /* 采样失败：保留 CSS 兜底渐变 */ }
+      };
+      img.onerror = function(){ /* 加载失败：保留兜底 */ };
+      img.src = url;
+    }
 
     /* ---------- 网页动态特效：注册表驱动（多选叠加 / 可全关） ----------
        新增特效三步：① 在 .bg 背景栈里加一个效果层（如 <div class="fxXxx"></div>）；
@@ -1004,7 +1073,7 @@ body{
       if(v === KEY){
         err.textContent = '';
         list.classList.add('on'); ops.classList.add('on'); fxSec.classList.add('on');
-        pwd.disabled = true; unlockB.disabled = true; unlockB.textContent = '已解锁';
+        pwd.disabled = true; unlockB.disabled = true;   /* 箭头保留仅置灰（课件同款：门开即静默） */
         render(); renderFx();
         toast('背景管理已解锁');
       }else{
@@ -1082,6 +1151,17 @@ body{
     applyBg(state.active);
     applyStretch(state.stretch);
     applyFx();
+    /* 手写子集字体异步就绪 / 窗口加载后再补采一次（以稳定布局测角标位置） */
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(function(){ sampleBadgeFill(state.active); });
+    }
+    window.addEventListener('load', function(){ sampleBadgeFill(state.active); });
+    /* 视口变化 → 角标在底图上的映射区域变化，防抖重采 */
+    var rzBadge = null;
+    window.addEventListener('resize', function(){
+      if(rzBadge) clearTimeout(rzBadge);
+      rzBadge = setTimeout(function(){ sampleBadgeFill(state.active); }, 220);
+    });
   })();
 
   render();
