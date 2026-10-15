@@ -426,7 +426,6 @@ body{
   font-family:"STKaiti","Kaiti SC",KaiTi,serif;
   transition:box-shadow .2s;
 }
-#bgPwd::placeholder{color:rgba(232,202,106,.45); font-weight:400; letter-spacing:.05em;}
 #bgPwd:focus{box-shadow:0 0 0 3px rgba(232,201,106,.22);}
 #bgPwd.bad{border-color:#b03a2e; animation:bgShake .38s;}
 @keyframes bgShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
@@ -598,7 +597,7 @@ body{
 <button id="bgBtn" type="button" title="切换背景图片"><span class="bgBtnIcon">🎨</span></button>
 <div id="bgPanel" role="dialog" aria-label="背景图片管理">
   <div id="bgLockRow">
-    <input id="bgPwd" type="password" placeholder="请输入密钥" autocomplete="off">
+    <input id="bgPwd" type="password" autocomplete="off">
     <button id="bgUnlock" type="button" title="解锁">➜</button>
   </div>
   <div id="bgErr"></div>
