@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261014-0155">
+<meta name="build" content="NAV-20261015-1545">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -99,6 +99,13 @@ body{
 @keyframes corePulse{
   0%,100%{opacity:.5; transform:translate(-50%,-50%) scale(1);}
   50%{opacity:.85; transform:translate(-50%,-50%) scale(1.14);}
+}
+/* 猫形遮挡层：与底图逐像素对齐的猫身切图（RGBA，猫形以外全透明），
+   覆盖在涟漪层之上——猫体遮挡涟漪（物理正确：水面涟漪被猫身挡住），
+   只显示未被遮挡的部分；切图 RGB 取底图原像素，视觉上与底图零差异 */
+.bgCat{
+  position:absolute; left:0; top:0; width:100%; height:var(--art-h);
+  background:url('cat-cut.png') center center / 100% 100% no-repeat;
 }
 
 /* ==================== 内容舞台（grid 居中，内容超高时不被裁切） ==================== */
@@ -453,6 +460,7 @@ body{
     <span class="rp" style="--x:80%;--y:80vh;--w:40vw;--o:.34;--b:7px;--d:5.9s; --dur:12.5s;"></span>
     <span class="rp" style="--x:80%;--y:80vh;--w:56vw;--o:.22;--b:9px;--d:9.2s; --dur:15.5s;"></span>
   </div>
+  <div class="bgCat" aria-hidden="true"></div>
 </div>
 
 <main class="stage">
@@ -511,7 +519,6 @@ body{
 <!-- 背景切换器：右上角小按钮 + 密钥解锁菜单（切换/导入/删除/智能拉伸） -->
 <button id="bgBtn" type="button" title="切换背景图片"><span class="bgBtnIcon">🎨</span></button>
 <div id="bgPanel" role="dialog" aria-label="背景图片管理">
-  <h3>背景图片管理</h3>
   <div id="bgLockRow">
     <input id="bgPwd" type="password" placeholder="请输入密钥" autocomplete="off">
     <button id="bgUnlock" type="button">解锁</button>
@@ -740,7 +747,7 @@ body{
 
   /* ---------- 背景切换器：密钥解锁 + 切换/导入/删除 + 智能拉伸 ---------- */
   (function(){
-    var KEY = 'zyywz';
+    var KEY = 'zyzwz2026';
     var LS = 'hehe-bg-switch-v1';
     var builtin = [
       { id:'bg.jpg',  name:'蓝白水彩 · 高清原图' },
@@ -778,21 +785,34 @@ body{
     function applyBg(url){
       var art = document.querySelector('.bgArt');
       var seam = document.querySelector('.bgSeam');
+      var cat = document.querySelector('.bgCat');
       if(art)  art.style.backgroundImage  = "url('" + url + "')";
       if(seam) seam.style.backgroundImage = "url('" + url + "')";
+      /* 猫形遮挡层联动：仅内置双图（同猫构图）套遮挡层；导入的自定义图无猫形，隐藏 */
+      if(cat){
+        if(url === 'bg.jpg' || url === 'bg2.jpg'){
+          cat.style.display = '';
+          cat.style.backgroundImage = "url('cat-cut" + (url === 'bg2.jpg' ? '2' : '') + ".png')";
+        }else{
+          cat.style.display = 'none';
+        }
+      }
     }
     function applyStretch(on){
       var art = document.querySelector('.bgArt');
       var seam = document.querySelector('.bgSeam');
+      var cat = document.querySelector('.bgCat');
       if(!art) return;
       if(on){
         art.style.height = '100%';
         art.style.backgroundSize = '100% 100%';
         if(seam) seam.style.display = 'none';
+        if(cat){ cat.style.height = '100%'; cat.style.backgroundSize = '100% 100%'; }
       }else{
         art.style.height = '';
         art.style.backgroundSize = '';
         if(seam) seam.style.display = '';
+        if(cat){ cat.style.height = ''; cat.style.backgroundSize = ''; }
       }
     }
     function isCustom(id){ return state.custom.some(function(c){ return c.id === id; }); }
