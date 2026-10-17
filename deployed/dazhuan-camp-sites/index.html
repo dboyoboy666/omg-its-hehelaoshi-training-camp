@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261016-0930">
+<meta name="build" content="NAV-20261016-1615">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -158,20 +158,21 @@ body{
   0%,100%{background-position:100% 50%, 0% 45%;}
   50%{background-position:0% 50%, 100% 55%;}
 }
-/* 「浦外」角标：贴「师」字右上角相邻处（2026-10-16 修正：原为「师多之间居中悬空」，
-   改为锚定师字右上角，贴合原版 vị trí）
+/* 「浦外」角标：悬于「师」「多」二字正上方（2026-10-15 新增，当晚三轮改版；
+   2026-10-16 下午修复：今早提交误改为「锚定师字右上角」且未随标题字体更换重测墨迹
+   常数，导致角标压字——本块恢复二字间隙居中定位，常数已按新字体重测，见 placeBadge）
    - 字号 = 大标题的 2/9（.22em：在 1/3 基础上再缩 1/3，相对父级字号，随 clamp 自适应）
    - 外框 = 滚动标语同款橙渐变 + 高光流光（双图层 + titleSheen，颜色与特效全同标语）
    - 框内填充 = 导航页背景图同款水色渐变（运行时 JS 采样当前底图，见 sampleBadgeFill）
-   - 框内字 = 滚动标语同款橙渐变 + 高光扫过（不滚动）
+   - 框内字 = 标语橙渐变 + 高光扫过（不滚动）；框内字字体 = NavBadgeHei（2026-10-16 起）
    - 浮动 = 与大标题同一套 titleFloat（同曲线/同时长 10.4s，只上浮不下沉），
-     延迟 = 「师」字自身延迟（JS 设 0.96s / 1.35s），与师同相浮动、锁定于师右上角
+     延迟取「师」「多」二字波浪相位的正中（JS 设 1.12s / 1.575s），随波浪一同起伏
    - 定位（placeBadge 运行时精确设置，此处仅为兜底）：
-     左缘贴师墨迹右缘外侧 + 2px；底边贴师墨迹顶上方 2px——相邻而不压字；
-     与师同相浮动（延迟一致）⇒ 任何相位相对几何恒定，不侵入师/多墨迹 */
+     水平居中于「师」「多」墨迹间隙中点；垂直布局位 = 白框内沿 + 上浮行程(10px)
+     + 2px——浮动顶点仍收在框内一丝；与二字墨迹同相浮动，相对间隙恒定（≥3px） */
 .title > span{position:relative;}   /* 保留：span 层叠基准（角标已移出单字，不再依赖） */
 .titleBadge{
-  position:absolute; left:36%; top:0; z-index:2; font-family:'NavBadgeHei',"HYQiHei","PingFang SC",sans-serif;
+  position:absolute; left:50%; top:-8px; z-index:2; font-family:'NavBadgeHei',"HYQiHei","PingFang SC",sans-serif;
   font-size:.22em; line-height:1; font-weight:800; letter-spacing:.05em;
   padding:.12em; border-radius:.44em; pointer-events:none;
   background-image:
@@ -505,46 +506,6 @@ body{
   *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
 }
 
-/* ===== 双人 PK 血条 · 导航页演示副本（前缀 npk- 隔离，源：甲骨小侦探训练营 V3.666） =====
-   仅做视觉移植与演示，不依赖课件游戏逻辑；所有类名加 npk- 前缀避免污染宿主页。 */
-.npk-demo{width:min(760px,94vw);margin:clamp(18px,3vh,30px) auto 0;}
-.npk-demo .npk-head{display:flex;align-items:baseline;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
-.npk-demo .npk-title{font-size:clamp(16px,2.4vw,22px);font-weight:800;color:var(--ink);letter-spacing:.04em;}
-.npk-demo .npk-src{font-size:12px;color:var(--muted);}
-.npk-hpwrap{padding:18px 16px 12px;}
-.npk-track{position:relative;}
-.npk-bar{position:relative;height:38px;border-radius:20px;overflow:hidden;border:3px solid #caa44a;
-  background:#241809;box-shadow:0 6px 22px rgba(0,0,0,.18),inset 0 0 12px rgba(0,0,0,.22);}
-.npk-fill{position:absolute;top:0;bottom:0;display:flex;align-items:center;overflow:hidden;
-  transition:width .28s cubic-bezier(.4,0,.2,1);}
-.npk-red{left:0;background:linear-gradient(180deg,#ff8a80,#e74c3c 45%,#8e1f12);}
-.npk-blue{right:0;justify-content:flex-end;background:linear-gradient(180deg,#8fd3ff,#2471a3 45%,#0f3556);}
-.npk-tag{font-size:clamp(11px,1.5vw,16px);font-weight:800;color:#fff;padding:0 14px;white-space:nowrap;
-  text-shadow:0 2px 5px rgba(0,0,0,.75);}
-.npk-fill.npk-dominant{animation:npkFlash .38s ease-in-out infinite;z-index:2;}
-.npk-fill.npk-weak{animation:npkBreath 1.05s ease-in-out infinite;}
-@keyframes npkFlash{0%,100%{filter:brightness(1) saturate(1)}50%{filter:brightness(1.9) saturate(1.55)}}
-@keyframes npkBreath{0%,100%{opacity:1}50%{opacity:.4}}
-.npk-mid{position:absolute;top:-14px;bottom:-14px;left:50%;width:0;z-index:6;transform:translateX(-50%);}
-.npk-bolt{position:absolute;left:-10px;top:0;width:20px;height:100%;
-  background:linear-gradient(180deg,#fffde7,#ffd700 45%,#ff8f00);
-  /* 修复：顶部尖角(26% 0)与底部尖角(26% 100%)上下镜像对称（原版顶部缺尖角→补全） */
-  clip-path:polygon(26% 0,82% 55%,52% 55%,48% 60%,26% 100%,82% 45%,52% 45%,48% 40%);
-  animation:npkBoltFlick .16s infinite alternate;}
-@keyframes npkBoltFlick{0%{opacity:.7;filter:drop-shadow(0 0 5px #ffd700)}
-  100%{opacity:1;filter:drop-shadow(0 0 20px #fff59d) brightness(1.5)}}
-.npk-mid .npk-spark{position:absolute;left:0;top:50%;width:5px;height:5px;border-radius:50%;background:#ffe9a8;
-  box-shadow:0 0 9px 2px #ffca28;animation:npkSparkFly .75s linear infinite;}
-@keyframes npkSparkFly{0%{transform:translate(0,0) scale(1.1);opacity:1}
-  100%{transform:translate(var(--dx),var(--dy)) scale(.15);opacity:0}}
-.npk-ctrl{display:flex;gap:12px;justify-content:center;margin-top:14px;}
-.npk-ctrl button{font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:999px;
-  padding:8px 20px;color:#fff;background:linear-gradient(115deg,#4f46e5,#2563eb);
-  box-shadow:0 4px 14px rgba(37,99,235,.35);transition:transform .12s,filter .12s;}
-.npk-ctrl button:hover{filter:brightness(1.08);}
-.npk-ctrl button:active{transform:translateY(1px);}
-.npk-ctrl button.npk-reset{background:linear-gradient(115deg,#94a3b8,#64748b);box-shadow:none;}
-
 </style>
 </head>
 <body>
@@ -610,17 +571,23 @@ body{
       <span class="c-sub">大篆训练营 · 互动课件</span>
       <span class="cta">点击进入 <i>›</i></span>
     </article>
-    <article class="card slot" draggable="true" title="预留课件位">
+    <article class="card game" draggable="true" data-href="course-zhuanke.html"
+             data-title="篆刻工坊" data-sub="小篆训练营 · 互动课件"
+             data-icon="篆" title="篆刻工坊 · 小篆训练营">
       <span class="shine"></span>
-      <span class="icon">＋</span>
-      <span class="c-title">虚位以待</span>
-      <span class="c-sub">预留互动游戏课件位</span>
+      <span class="icon">篆</span>
+      <span class="c-title">篆刻工坊</span>
+      <span class="c-sub">小篆训练营 · 互动课件</span>
+      <span class="cta">点击进入 <i>›</i></span>
     </article>
-    <article class="card slot" draggable="true" title="预留课件位">
+    <article class="card game" draggable="true" data-href="course-jiagu.html"
+             data-title="甲骨小侦探" data-sub="书写挑战赛 · 互动课件"
+             data-icon="甲" title="甲骨小侦探训练营 · 书写挑战赛">
       <span class="shine"></span>
-      <span class="icon">＋</span>
-      <span class="c-title">虚位以待</span>
-      <span class="c-sub">预留互动游戏课件位</span>
+      <span class="icon">甲</span>
+      <span class="c-title">甲骨小侦探</span>
+      <span class="c-sub">书写挑战赛 · 互动课件</span>
+      <span class="cta">点击进入 <i>›</i></span>
     </article>
     <article class="card slot" draggable="true" title="预留课件位">
       <span class="shine"></span>
@@ -637,34 +604,6 @@ body{
 
   <p class="copyright">Copyright © 2026 何何老师@PFLS. All rights reserved.</p>
 
-  <!-- 双人 PK 血条 · 视觉演示（移植自甲骨小侦探训练营 V3.666；中间闪电已修复上下对称） -->
-  <section class="npk-demo" aria-label="双人PK血条演示">
-    <div class="npk-head">
-      <span class="npk-title">⚔ 双人 PK 血条</span>
-      <span class="npk-src">视觉演示 · 源：甲骨小侦探训练营 V3.666</span>
-    </div>
-    <div class="npk-hpwrap">
-      <div class="npk-track">
-        <div class="npk-bar">
-          <div class="npk-fill npk-red" id="npkRed" style="width:50%"><span class="npk-tag" id="npkTagL">甲 ▶ 50%</span></div>
-          <div class="npk-fill npk-blue" id="npkBlue" style="width:50%"><span class="npk-tag" id="npkTagR">50% ◀ 乙</span></div>
-        </div>
-        <div class="npk-mid" id="npkMid">
-          <div class="npk-bolt"></div>
-          <span class="npk-spark" style="--dx:-26px;--dy:-22px;animation-delay:0s"></span>
-          <span class="npk-spark" style="--dx:24px;--dy:-26px;animation-delay:.12s"></span>
-          <span class="npk-spark" style="--dx:-30px;--dy:16px;animation-delay:.24s"></span>
-          <span class="npk-spark" style="--dx:28px;--dy:20px;animation-delay:.36s"></span>
-          <span class="npk-spark" style="--dx:-8px;--dy:-32px;animation-delay:.48s"></span>
-          <span class="npk-spark" style="--dx:6px;--dy:30px;animation-delay:.6s"></span>
-        </div>
-      </div>
-    </div>
-    <div class="npk-ctrl">
-      <button type="button" id="npkPlay">▶ 开始演示</button>
-      <button type="button" id="npkReset" class="npk-reset">↺ 重置</button>
-    </div>
-  </section>
 </main>
 
 <!-- 背景切换器：右上角小按钮 + 密钥解锁菜单（切换/导入/删除/智能拉伸） -->
@@ -703,12 +642,12 @@ body{
     title.appendChild(s);
   });
 
-  /* 「浦外」角标：贴「师」字右上角相邻处（2026-10-16 修正：原为「师多之间居中悬空」，
-     改为锚定师字右上角，贴合原版位置）。字号=大标题 2/9；外框=标语橙渐变流光；
+  /* 「浦外」角标：悬于「师」「多」二字正上方。字号=大标题 2/9；外框=标语橙渐变流光；
      框内填充=背景图水色（JS 采样），框内字=标语橙渐变（不滚动）。三层结构：
      .titleBadge=框 / i=填充 / i>span=字（渐变裁字须独占元素）。
      角标文字用独立字体 NavBadgeHei（汉仪旗黑），与标题手写体分离；
-     浮动延迟 = 「师」字自身延迟（0.96s / 1.35s），与师同相浮动、锁定于师右上角。 */
+     浮动延迟 = 「师」(0.96s/1.35s) 与「多」(1.28s/1.8s) 波浪相位的正中 1.12s/1.575s，
+     与二字同相浮动。2026-10-16 下午修复：恢复间隙居中定位（今早曾被误改为师字右上角）。 */
   var shiSpan = null;
   Array.prototype.forEach.call(title.children, function(s){
     if(!shiSpan && s.textContent === '师') shiSpan = s;
@@ -717,34 +656,63 @@ body{
     var badge = document.createElement('b');
     badge.className = 'titleBadge';
     badge.innerHTML = '<i><span>浦外</span></i>';
-    badge.style.animationDelay = '0.96s, 1.35s';  /* 与师同相浮动：锁定于师右上角 */
+    badge.style.animationDelay = '1.12s, 1.575s';  /* 师/多波浪相位正中：与二字同相起伏 */
     title.appendChild(badge);
   }
 
-  /* 角标定位（placeBadge）：锚定「师」字右上角相邻处。
-     墨迹常数 = 66px 字号实测折算的 em 比例（同一手写子集字体，随 clamp 自适应）：
-       INK_RIGHT_SHI = 师墨迹右缘（span 内 x61/66 = 0.924）
-       INK_TOP_SHI   = 师墨迹顶   （span 内 y33/66 = 0.500）
-     定位：badge 左缘 = 师墨迹右缘 + GAP；badge 底边 = 师墨迹顶 − GAP
-       ⇒ 角标贴师右上角外侧、相邻而不压字；与师同相浮动（延迟一致）⇒
-       任何相位相对几何恒定，无需防压字让位。 */
+  /* 角标定位（placeBadge）：
+     水平中心 = 「师」墨迹右缘 与「多」墨迹左缘 的中点（二字正中间）；
+     垂直布局位 = headBlock 白框内沿 + 上浮行程(10px) + 2px——角标与大标题同相浮动
+     （titleFloat 只上浮不下沉），浮动顶点仍收在框内一丝，不压框线；
+     防压字：角标与二字墨迹同相浮动（延迟取相位正中，漂移 ≤0.5px），相对几何恒定，
+     底边 ≤ 两字覆盖区最高墨迹顶（含「多」字左上撇，span 内 y17）− 间隙(3px) 即可，
+     若仍会导致压字则自动让位（优先不压字）。
+     墨迹常数 = 66px 字号像素实测折算的 em 比例（同一手写子集字体，随 clamp 自适应）。
+     2026-10-16 下午：标题字体更换后按新字体重测（Chrome 无头渲染 + 像素扫描；
+     旧字体常数复现校验通过——多左缘 0.227 / 多顶 0.258 与旧值分毫不差）——
+       师右缘 0.924 → 0.955（span 内 x63/66）；师顶 0.500 → 0.242（span 内 y16/66）；
+       多左缘 0.227（span 内 x15/66，不变）；  多顶 0.258（span 内 y17/66，不变）。 */
   function placeBadge(){
     var badge = document.querySelector('.titleBadge');
     if(!badge) return;
     var spans = title.querySelectorAll(':scope > span');
-    var shi = null;
+    var shi = null, duo = null;
     Array.prototype.forEach.call(spans, function(s){
       if(s.textContent === '师') shi = s;
+      else if(s.textContent === '多') duo = s;
     });
-    if(!shi) return;
+    if(!shi || !duo) return;
     var fs = parseFloat(getComputedStyle(shi).fontSize);
-    var INK_RIGHT_SHI = 0.924 * fs;  /* 师墨迹右缘（span 内 x61/66） */
-    var INK_TOP_SHI   = 0.500 * fs;  /* 师字覆盖区最高墨迹顶（span 内 y33/66） */
-    var GAP = 2;                     /* 角标与师右上角的间隙（相邻不压字） */
-    var bh = badge.offsetHeight, bw = badge.offsetWidth;
-    /* 角标吸附师字右上角：左缘贴师墨迹右缘外侧、底边贴师墨迹顶上方 */
-    badge.style.left = (shi.offsetLeft + INK_RIGHT_SHI + GAP) + 'px';
-    badge.style.top  = (shi.offsetTop + INK_TOP_SHI - bh - GAP) + 'px';
+    var INK_RIGHT_SHI = 0.955 * fs;  /* 师墨迹右缘（新字体实测：span 内 x63/66） */
+    var INK_LEFT_DUO  = 0.227 * fs;  /* 多墨迹左缘（span 内 x15/66；新旧字体一致） */
+    var INK_TOP_SHI   = 0.242 * fs;  /* 师字覆盖区最高墨迹顶（新字体实测：span 内 y16/66） */
+    var INK_TOP_DUO   = 0.258 * fs;  /* 多字覆盖区最高墨迹顶（span 内 y17/66，左上撇；新旧一致） */
+    var FLOAT_UP  = 10;              /* titleFloat 上浮行程（角标与大字同相浮动，只上不下） */
+    var FRAME_GAP = 2;               /* 角标浮动顶点距白框内沿的呼吸（贴框一丝，不压框线） */
+    var INK_GAP   = 3;               /* 角标底与墨迹顶的间隙（同相浮动，相对几何恒定） */
+    var cx = ((shi.offsetLeft + INK_RIGHT_SHI) + (duo.offsetLeft + INK_LEFT_DUO)) / 2;
+    var hb = document.querySelector('.headBlock');
+    var titleRect = title.getBoundingClientRect();
+    var top;
+    if(hb){
+      var hbBorder = parseFloat(getComputedStyle(hb).borderTopWidth) || 1;
+      top = (hb.getBoundingClientRect().top + hbBorder + FLOAT_UP + FRAME_GAP) - titleRect.top;
+    }else{
+      top = -8;
+    }
+    badge.style.top = top + 'px';
+    var bw = badge.offsetWidth, bh = badge.offsetHeight;
+    badge.style.left = (cx - bw / 2) + 'px';
+    /* 防压字校验：任何相位底边不得侵入两字覆盖区最高墨迹（取师/多较小者）。
+       角标与字同相浮动 ⇒ 无需再预留浮动行程，仅留 3px 间隙（含邻字 0.32s 相位差漂移） */
+    var inkTop = Math.min(titleRect.top + shi.offsetTop + INK_TOP_SHI,
+                          titleRect.top + duo.offsetTop + INK_TOP_DUO);
+    var limit  = inkTop - INK_GAP;
+    var bottom = titleRect.top + top + bh;
+    if(bottom > limit){
+      top = limit - titleRect.top - bh;
+      badge.style.top = top + 'px';
+    }
   }
   placeBadge();
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(placeBadge); }
@@ -1289,56 +1257,5 @@ body{
 })();
 </script>
 
-<script>
-/* 双人 PK 血条演示（npk- 前缀，隔离于宿主页逻辑；源：甲骨小侦探训练营 V3.666） */
-(function(){
-  var red=document.getElementById('npkRed'),
-      blue=document.getElementById('npkBlue'),
-      tagL=document.getElementById('npkTagL'),
-      tagR=document.getElementById('npkTagR'),
-      mid=document.getElementById('npkMid'),
-      playBtn=document.getElementById('npkPlay'),
-      resetBtn=document.getElementById('npkReset'),
-      timer=null;
-  function setHp(r,b){
-    red.style.width=r+'%';
-    blue.style.width=b+'%';
-    mid.style.left=r+'%';
-    tagL.textContent='甲 ▶ '+Math.round(r)+'%';
-    tagR.textContent=Math.round(b)+'% ◀ 乙';
-    var rLead=r>b, bLead=b>r;            /* 平局时双方均不闪，静止展示 */
-    red.classList.toggle('npk-dominant', rLead);
-    red.classList.toggle('npk-weak', bLead);
-    blue.classList.toggle('npk-dominant', bLead);
-    blue.classList.toggle('npk-weak', rLead);
-  }
-  function reset(){
-    if(timer){clearInterval(timer);timer=null;}
-    setHp(50,50);
-    if(playBtn) playBtn.textContent='▶ 开始演示';
-  }
-  function play(){
-    reset();
-    var r=50,b=50;
-    setHp(r,b);
-    if(playBtn) playBtn.textContent='演示中…';
-    timer=setInterval(function(){
-      r-=(Math.random()*4+3);
-      b-=(Math.random()*3+2);
-      if(r<=18||b<=18){
-        r=Math.max(18,r);b=Math.max(18,b);
-        setHp(r,b);
-        if(timer){clearInterval(timer);timer=null;}
-        if(playBtn) playBtn.textContent='▶ 再演示一次';
-        return;
-      }
-      setHp(r,b);
-    },320);
-  }
-  if(playBtn) playBtn.addEventListener('click',play);
-  if(resetBtn) resetBtn.addEventListener('click',reset);
-  setHp(50,50);
-})();
-</script>
 </body>
 </html>
