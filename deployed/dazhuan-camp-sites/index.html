@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>何何老师多合一专题训练营</title>
-<meta name="build" content="NAV-20261018-1225">
+<meta name="build" content="NAV-20261117-1204">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233B82F6'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='KaiTi,serif'%3E铭%3C/text%3E%3C/svg%3E">
 <style>
 /* =====================================================================
@@ -510,6 +510,30 @@ body{
   *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
 }
 
+
+/* ---- 版本同步：底部常驻构建号（可点击检查） + 新版胶囊气泡（复刻 hehelaoshi-trainingcamp-666 同款） ---- */
+.buildLine{
+  font-size:clamp(10px,.95vw,12px); color:var(--muted); letter-spacing:.5px;
+  background:rgba(255,255,255,.35); padding:4px 14px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.45); cursor:pointer; user-select:none;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  transition:background .25s;
+}
+.buildLine:hover{background:rgba(255,255,255,.62);}
+.updBubble{
+  position:fixed; left:50%; bottom:20px; transform:translate(-50%,20px);
+  z-index:1300; text-align:center; cursor:pointer; user-select:none;
+  background:rgba(22,50,79,.94); color:#fff;
+  padding:12px 26px; border-radius:999px;
+  font-size:14px; font-weight:700; letter-spacing:.5px;
+  box-shadow:0 12px 30px rgba(0,0,0,.30);
+  opacity:0; pointer-events:none; transition:.32s ease;
+}
+.updBubble.show{opacity:1; transform:translate(-50%,0); pointer-events:auto;}
+.updBubble .updSub{
+  display:block; font-size:10.5px; font-weight:400; opacity:.75;
+  margin-top:2px; letter-spacing:.3px;
+}
 </style>
 </head>
 <body>
@@ -616,6 +640,9 @@ body{
   </button>
 
   <p class="copyright">Copyright © 2026 何何老师@PFLS. All rights reserved.</p>
+
+  <!-- 版本同步：常驻构建号（点击立即检查更新；发现新版时底部自动弹胶囊气泡） -->
+  <p class="buildLine" id="buildLine" title="点击检查更新"></p>
 
 </main>
 
@@ -763,7 +790,7 @@ body{
   setTimeout(fitOrbit, 400);
 
   /* ---------- 轻提示 ---------- */
-  function toast(msg){
+  function toast(msg){   /* 构建号版本检测 IIFE（闭包外）也要用——挂 window 出口（2026-11-17 移植适配） */
     var old = document.querySelector('.toast');
     if(old) old.remove();
     var t = document.createElement('div');
@@ -776,6 +803,7 @@ body{
       setTimeout(function(){ t.remove(); }, 360);
     }, 2000);
   }
+  window.toast = toast;   /* 版本检测 IIFE 消费出口 */
 
   /* ---------- 课件卡片：数据模型驱动 ---------- */
   var MAX_VISIBLE = 10;          /* 同屏最多显示 10 个课件位，超出折叠 */
@@ -1269,6 +1297,66 @@ body{
 
   render();
 })();
+
+  /* ---------- 版本检测：构建号常驻 + 新版胶囊气泡 + 带版本号强制跳转（复刻 hehelaoshi-trainingcamp-666 同款）
+     手机/微信内置浏览器对 location.reload() 常套用旧缓存 —— 重载后仍是旧版。
+     改为：发现新构建号后走一次带 ?v=新构建号 的新 URL（location.replace），
+     URL 变了缓存必然失效；底部常驻构建号，点击可手动检查。
+     检测方式：fetch 当前 index.html（带时间戳 + no-store 绕缓存），比对 meta build。 */
+  (function(){
+    var meta = document.querySelector('meta[name="build"]');
+    var BUILD = meta ? (meta.getAttribute('content') || '') : '';
+    var line = document.getElementById('buildLine');
+    var bubble = null;
+    if(line){
+      line.textContent = '点击同步到最新版课件：' + BUILD;
+      line.addEventListener('click', function(){ check(true); });
+    }
+    function showBubble(remote){
+      if(!bubble){
+        bubble = document.createElement('div');
+        bubble.className = 'updBubble';
+        bubble.setAttribute('role', 'button');
+        bubble.addEventListener('click', function(){
+          location.replace('index.html?v=' + encodeURIComponent(remote));
+        });
+        document.body.appendChild(bubble);
+      }
+      bubble.innerHTML = '🚀 新版本 ' + remote + ' · 点击更新' +
+        '<span class="updSub">当前版本 v' + BUILD + '</span>';
+      requestAnimationFrame(function(){ bubble.classList.add('show'); });
+    }
+    function check(manual){
+      fetch('index.html?chk=' + Date.now(), { cache:'no-store' }).then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      }).then(function(html){
+        var m = html.match(/name="build"\s+content="([^"]+)"/);
+        var remote = m ? m[1] : '';
+        if(remote && remote !== BUILD){
+          showBubble(remote);
+          if(manual) toast('发现新版本 v' + remote);
+        }else if(manual){
+          toast('已是最新版');
+        }
+      }).catch(function(){
+        if(manual) toast('检查更新失败，请稍后再试');
+      });
+    }
+    /* 加载后自动查一次；从微信/后台切回来自动复查（回前台是缓存卡旧版的高发时机） */
+    setTimeout(function(){ check(false); }, 3000);
+    document.addEventListener('visibilitychange', function(){
+      if(document.visibilityState === 'visible') check(false);
+    });
+    /* 带 ?v= 进入且已是目标版本时，清掉查询参数保持地址栏干净；
+       若仍被缓存卡在旧版（BUILD ≠ v 值），保留参数并继续检测弹泡 */
+    try{
+      var vParam = new URLSearchParams(location.search).get('v');
+      if(vParam && vParam === BUILD){
+        history.replaceState(null, '', location.pathname);
+      }
+    }catch(e){}
+  })();
 </script>
 
 </body>
