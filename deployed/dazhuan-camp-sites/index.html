@@ -510,6 +510,20 @@ body{
   *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
 }
 
+  /* ==================== 楷书课件位门禁（eggGate 同款风格，源：course.html #eggGate/#eggIn/#eggGo 484-495 行）
+     零文字提示：只有金框掩码输入框（type=password 字符隐去）与箭头键；错钥仅抖动+红框（不显示文案） ==================== */
+  #kaishuGate{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+    background:rgba(8,6,3,.78);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
+  #kaishuGate.on{display:flex;}
+  #kaishuGate .gateBox{display:flex;align-items:center;gap:10px;}
+  #ksIn{width:min(64vw,280px);padding:13px 16px;border-radius:14px;border:2px solid #c9a227;
+    background:rgba(20,16,10,.92);color:#e8c96a;font-family:"STKaiti","Kaiti SC",KaiTi,serif;
+    font-size:20px;font-weight:700;letter-spacing:5px;text-align:center;outline:none;}
+  #ksIn:focus{box-shadow:0 0 0 3px rgba(232,201,106,.22);}
+  #ksIn.bad{border-color:#b03a2e;animation:bgShake .35s;}
+  #ksGo{width:52px;height:52px;border-radius:14px;border:2px solid #c9a227;cursor:pointer;flex:none;
+    background:rgba(20,16,10,.92);color:#e8c96a;font-size:22px;font-weight:900;}
+  #ksGo:hover{background:rgba(201,162,39,.2);}
 </style>
 </head>
 <body>
@@ -591,6 +605,15 @@ body{
       <span class="icon">甲</span>
       <span class="c-title">甲骨小侦探</span>
       <span class="c-sub">书写挑战赛 · 互动课件</span>
+      <span class="cta">点击进入 <i>›</i></span>
+    </article>
+    <article class="card game" draggable="true" data-href="course-kaishu.html"
+             data-title="颜筋柳骨·楷法觉醒" data-sub="楷书训练营 · 互动课件"
+             data-icon="楷" title="颜筋柳骨·楷法觉醒训练营 · 楷书训练营">
+      <span class="shine"></span>
+      <span class="icon">楷</span>
+      <span class="c-title">颜筋柳骨·楷法觉醒</span>
+      <span class="c-sub">楷书训练营 · 互动课件</span>
       <span class="cta">点击进入 <i>›</i></span>
     </article>
     <article class="card slot" draggable="true" title="预留课件位">
@@ -1262,5 +1285,50 @@ body{
 })();
 </script>
 
+<!-- 楷书课件位门禁：零文字口令窗（掩码输入，风格与课件 eggGate 一致） -->
+<div id="kaishuGate"><div class="gateBox"><input id="ksIn" type="password" autocomplete="off" spellcheck="false"><button id="ksGo">➜</button></div></div>
+<script>
+/* ==================== 楷书课件位门禁（V5.3 接入，2026-11-17） ====================
+   交互口径与课件 eggGate 完全同款：错钥仅抖动+红框（零文案提示）；掩码输入（type=password，
+   输入过程实时显示为●，禁止明文回显——何何老师 2026-11-17 补充定稿）；点空白/Escape 关闭。 */
+(function(){
+  var KS_KEY = [80,70,76,83,54,54,54].map(function(c){return String.fromCharCode(c);}).join('');   /* 密钥不落明文（构建期拆散，禁止在源码直接书写） */
+  var gate = document.getElementById('kaishuGate');
+  var input = document.getElementById('ksIn');
+  var goBtn = document.getElementById('ksGo');
+  if(!gate || !input) return;
+  var pendingHref = '';
+  function openGate(href){ pendingHref = href; input.value = ''; input.classList.remove('bad'); gate.classList.add('on'); setTimeout(function(){ input.focus(); }, 60); }
+  function closeGate(){ gate.classList.remove('on'); pendingHref = ''; }
+  function tryKey(){
+    var v = (input.value || '').trim();
+    if(v === KS_KEY){ var href = pendingHref; window.__ksGatePass(href); closeGate(); setTimeout(function(){ window.location.href = href; }, 120); }   /* href 先拷贝再关窗——pendingHref 会被 closeGate 清空（闭包读引用，实测踩坑） */
+    else{
+      input.classList.remove('bad'); void input.offsetWidth; input.classList.add('bad');
+      setTimeout(function(){ input.classList.remove('bad'); }, 450);
+    }
+  }
+  goBtn.addEventListener('click', tryKey);
+  input.addEventListener('keydown', function(e){ if(e.key === 'Enter') tryKey(); });
+  input.addEventListener('input', function(){ input.classList.remove('bad'); });
+  gate.addEventListener('click', function(e){ if(e.target === gate) closeGate(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && gate.classList.contains('on')) closeGate(); });
+
+  /* 卡片点击拦截：仅楷书课件位（course-kaishu.html）须经门禁——render() 重建卡片，
+     故挂 document 级事件委托（拖动换位/增删卡位均不受影响） */
+  document.addEventListener('click', function(e){
+    var card = e.target.closest ? e.target.closest('.card.game') : null;
+    if(!card) return;
+    var href = card.getAttribute('data-href') || '';
+    if(href.indexOf('course-kaishu.html') >= 0 && href !== lastPassedHref()){
+      e.stopImmediatePropagation();   /* 拦截原绑定跳转，先过门禁 */
+      openGate(href);
+    }
+  }, true);   /* capture：先于卡片自己的 click 冒泡处理器 */
+  function lastPassedHref(){ return sessionStorage.getItem('ksGatePassed') || ''; }
+  /* 已通过门禁的会话内放行：解锁成功后记录 href，同一会话再次点击不再拦（刷新/关窗即失效=内存态口径） */
+  window.__ksGatePass = function(href){ sessionStorage.setItem('ksGatePassed', href); };
+})();
+</script>
 </body>
 </html>
