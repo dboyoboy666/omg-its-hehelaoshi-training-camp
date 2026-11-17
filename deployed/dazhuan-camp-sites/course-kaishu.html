@@ -645,6 +645,19 @@ table.rk tr.me td{background:#f6ecd4;font-weight:800;}
 @keyframes nwFall{0%{margin-top:0;opacity:0}12%{opacity:1}100%{margin-top:108vh;opacity:.55;transform:rotate(300deg)}}
 @media (max-width:900px){.dianPk{grid-template-columns:1fr;}.dianDivider{display:none;}
   .dianHalf.R{margin-top:14px;}}
+#gkGate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#14100b}
+#gkGate.off{display:none}
+#gkBox{width:min(420px,86vw);text-align:center;padding:34px 30px;border:1.5px solid #c9a227;border-radius:14px;background:rgba(20,16,11,.92);box-shadow:0 0 40px rgba(201,162,39,.18)}
+#gkBox .gkT{font-family:'STKaiti','Kaiti SC',KaiTi,serif;font-size:clamp(14px,4.4vw,22px);letter-spacing:.08em;white-space:nowrap;color:#e8c96a;margin-bottom:6px}
+#gkBox .gkS{font-size:12.5px;color:#7d7062;margin-bottom:18px;line-height:1.7}
+#gkIn{width:100%;box-sizing:border-box;padding:11px 14px;font-size:16px;letter-spacing:.3em;text-align:center;color:#e8c96a;background:rgba(0,0,0,.35);border:1.5px solid #c9a227;border-radius:8px;outline:none}
+#gkIn:focus{border-color:#e8c96a}
+#gkIn.bad{border-color:#c0392b;animation:gkShake .38s}
+@keyframes gkShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+#gkGo{margin-top:14px;width:100%;padding:11px 0;font-size:15px;letter-spacing:.3em;font-weight:800;color:#14100b;background:linear-gradient(180deg,#e8c96a,#c9a227);border:none;border-radius:8px;cursor:pointer}
+#gkErr{height:18px;margin-top:10px;font-size:12px;color:#e07b52}
+#gkBack{margin-top:12px;background:none;border:1px solid rgba(201,162,39,.45);color:#7d7062;font-size:12px;letter-spacing:.22em;padding:6px 16px;border-radius:999px;cursor:pointer;transition:color .25s,border-color .25s}
+#gkBack:hover{color:#e8c96a;border-color:#e8c96a}
 </style>
 </head>
 <body>
@@ -5411,6 +5424,29 @@ window.__DG = {
   diagnoseCards, DIAG_AMP, BEILIN_LOOK   /* V5 新题型白盒钩子（真机断言直读，不改行为） */
 };
 
+</script>
+<div id="gkGate"><div id="gkBox"><div class="gkT">颜筋柳骨训练营 · 楷法觉醒</div><div class="gkS">课堂教学专用 —— 请输入访问密钥</div><input id="gkIn" type="password" autocomplete="off" inputmode="text"><button id="gkGo">进 入</button><div id="gkErr"></div><button id="gkBack" type="button">‹ 返回导航页</button></div></div>
+<script>
+/* ===== 部署门禁逻辑（与甲骨小侦探 course-jiagu.html 同款，仅换标题与密钥）：密钥只活内存（ok 变量），零持久化；关页/刷新即重输 ===== */
+(function(){
+  var KEY='zyywz', ok=false;
+  function $(id){return document.getElementById(id)}
+  window.__gkState=function(){return {on:!ok, bad:$('gkIn').classList.contains('bad')};};
+  function tryIn(){
+    var v=($('gkIn').value||'');
+    if(v===KEY){ ok=true; $('gkGate').classList.add('off'); $('gkIn').value=''; $('gkErr').textContent=''; }
+    else{ $('gkIn').classList.add('bad'); $('gkErr').textContent='密钥不对，请重试';
+      setTimeout(function(){ $('gkIn').classList.remove('bad'); },450); }
+  }
+  function arm(){
+    $('gkGo').onclick=tryIn;
+    $('gkIn').addEventListener('keydown',function(e){ if(e.key==='Enter') tryIn(); });
+    $('gkIn').focus();
+    var back=$('gkBack');
+    if(back) back.onclick=function(){ location.href='index.html'; };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',arm); else arm();
+})();
 </script>
 </body>
 </html>
