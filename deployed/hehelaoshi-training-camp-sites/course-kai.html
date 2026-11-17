@@ -692,6 +692,7 @@ table.rk tr.me td{background:#f6ecd4;font-weight:800;}
   <section class="slide" id="s16"></section>
   <section class="slide" id="s17"></section>
   <section class="slide" id="s18"></section>
+  <section class="slide" id="s19"></section>
 </div>
 <div id="modal"><div class="panel mCard" id="modalCard"></div></div>
 <div id="eggGate"><div class="gateBox"><input id="eggIn" type="password" autocomplete="off" spellcheck="false"><button id="eggGo">➜</button></div></div>
@@ -2026,9 +2027,9 @@ const TRACE_POOL = ["一","二","三","上","下","十","口","刀","弓","土",
 const P_COVER = 0, P_BOOK = 1, P_DETECT = 2, P_DISCERN = 3, P_TRACE = 4,
       P_CAST = 5, P_RESULT = 6, P_DUO_PREP = 7, P_DUO = 8, P_BOARD = 9,
       P_ANIM_SOLO = 10, P_ANIM_DUO = 11, P_DUO_RESULT = 12,
-      P_SHUANGGOU = 17, P_WUTI = 18;   /* V5.1 彩蛋扩容：新屏永远接在最大页码之后 */
+      P_SHUANGGOU = 17, P_WUTI = 18, P_REVIEW = 19;   /* V5.3 复盘页（新屏永远接在最大页码之后） */
 const PAGE_N = ['封面', '字表·我的字帖', '拼骨大师', '字医门诊', '写楷', '临池入墨', '结算', '双人对决', '对决', '墨池·榜单', '单人揭榜', '双人揭榜', '双人结算',
-  '世外桃源', '点兵点将', '点将PK', '点将结算', '双钩合璧', '五体连线'];   /* 13~18 为彩蛋层新增屏（旧屏页码不动） */
+  '世外桃源', '点兵点将', '点将PK', '点将结算', '双钩合璧', '五体连线', '赛后复盘'];   /* 13~19 为彩蛋层/复盘新增屏（旧屏页码不动） */
 const QUIZ_DETECT_N = 6;      /* 识楷题数（不写死判分边界，仅题量常量） */
 const QUIZ_DISCERN_N = 4;     /* 辨楷题数 */
 const QUIZ_LIM = 3;           /* 限时模式下每题秒数（2026-10-07 何何老师定稿：8→3，认字只花「看」的时间；
@@ -2060,7 +2061,7 @@ function go(n) {
   const R = [renderCover, renderBook, renderBone, renderDiagnose, renderTrace, null, renderResult, renderDuoPrep, renderPkIdle, renderBoard,
     () => renderAnimIdle('soloStage', P_RESULT), () => renderAnimIdle('duoStage', P_DUO_RESULT), renderDuoResult,
     renderTaoyuan, renderDianHome, renderDianPkIdle, renderDianResult,
-    renderShuanggouHome, renderWutiHome];   /* 13~18：彩蛋层（p5/p6/p7/p8 提供渲染函数） */
+    renderShuanggouHome, renderWutiHome, () => renderPkReview()];   /* 13~19：彩蛋层（p5/p6/p7/p8）+ 复盘（p4）——go() 调用时才解引用，跨分片安全 */
   if (R[n]) R[n]();
   syncBadge();
 }
@@ -2669,6 +2670,86 @@ function diagNextBtn(feed) {
     if (idx < S.cq.length) renderDiagnose();
     else { go(P_TRACE); toast('「写楷」开始：一笔一画，临池入墨！'); }
   };
+}
+
+/* ---------- 赛后复盘（V5.3：PK 字医抢答错题回看 · 内存态页） ----------
+   LAST_PK_REVIEW 仅当场地存在（p4 endDuo 终局快照）：换玩家登录/关窗即随会话失效，零清除逻辑；
+   页内：选选手 → 各自错题逐张「病笔红标重放 + 病名 + 处方」；无自动跳转/关闭，按钮三件常驻。 */
+function renderPkReview(side) {
+  const s = $('s19');
+  const head = '<div class="h1">🔍 赛后复盘 · 错题诊所</div>';
+  if (!LAST_PK_REVIEW) {
+    s.innerHTML = `<div class="wrap">${head}<div class="panel"><div class="boardEmpty">还没有可复盘的对局 —— 先打一场双人 PK。<br>
+      <div class="resBtns" style="margin-top:14px"><button class="btn" id="btnRvDuo">⚔️ 去双人对决</button><button class="btn ghost" id="btnRvHome">⌂ 回封面</button></div></div></div></div>`;
+    $('btnRvDuo').onclick = () => go(P_DUO_PREP);
+    $('btnRvHome').onclick = () => go(P_COVER);
+    return;
+  }
+  const d = LAST_PK_REVIEW;
+  if (!side) {   /* 选人页 */
+    s.innerHTML = `<div class="wrap">${head}
+      <div class="sub" style="text-align:center">点选手名字，回看他/她本场全部错题（红色=写错的那一笔）</div>
+      <div class="panel" style="max-width:620px;margin:14px auto">
+        ${['L', 'R'].map(k => {
+          const n = d.wrong[k].length;
+          return `<button class="btn" data-rv="${k}" style="width:100%;margin:8px 0;justify-content:space-between">
+            <span>${esc(d.names[k === 'L' ? 0 : 1])} 的错题</span><b>${n} 题</b></button>`;
+        }).join('')}
+        <div class="resBtns" style="margin-top:14px">
+          <button class="btn gold" id="btnRvAgain">🔁 再战一局</button>
+          <button class="btn ghost" id="btnRvBoard">🏛️ 榜单</button>
+          <button class="btn ghost" id="btnRvHome">⌂ 回封面</button>
+        </div>
+      </div>
+      <div class="footNote">复盘仅保留本场（内存态）——关闭页面或换人登录后自动失效，榜单成绩不受影响。</div>
+    </div>`;
+    s.querySelectorAll('[data-rv]').forEach(b => b.onclick = () => renderPkReview(b.dataset.rv));
+    $('btnRvAgain').onclick = () => go(P_DUO_PREP);
+    $('btnRvBoard').onclick = () => { BOARD_TAB = 'duo'; BOARD_DIFF = d.diff; go(P_BOARD); };
+    $('btnRvHome').onclick = () => go(P_COVER);
+    return;
+  }
+  /* 选手错题复盘页：逐题红标重放 */
+  const list = d.wrong[side], name = d.names[side === 'L' ? 0 : 1];
+  s.innerHTML = `<div class="wrap">${head}
+    <div class="sub" style="text-align:center">${esc(name)} · 本场错题 ${list.length} 题 —— 红笔=写错的那一笔，红框旁的字=正确答案</div>
+    <div class="panel" style="max-width:860px;margin:0 auto">
+      ${list.length ? list.map((w, i) => {
+        const pick = w.pickIdx >= 0 ? w.q.cards[w.pickIdx] : null;
+        return `<div style="border-bottom:1px dashed var(--paper3);padding:14px 0">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-family:'STKaiti','Kaiti SC',KaiTi,serif;font-size:30px;font-weight:900;flex:none">${esc(w.ch)}</span>
+            <div style="flex:1;font-size:13.5px;color:var(--ink);line-height:1.7">
+              ${pick ? `你选了<b style="color:#b03a2e">「${esc(pick.kind)}」</b>那张 —— 病笔已标红。` : '⏱ 这题双方都没来得及答。'}
+              病在：<b>${esc(w.q.cards.filter(c => c.kind !== '正').map(c => c.kind).join(' / '))}</b><br>
+              <span style="color:var(--muted)">处方：${esc(DZINFO[w.ch].desc)}</span>
+            </div>
+            <div style="display:flex;gap:10px;flex:none">${w.q.cards.map((card, ci) =>
+              `<div style="text-align:center"><canvas width="${L}" height="${L}" style="width:92px;height:92px;background:var(--paper);border-radius:10px;border:2.5px solid ${ci === w.q.answer ? 'var(--ok)' : (ci === w.pickIdx ? 'var(--cin)' : 'var(--paper3)')}"></canvas>
+                <div style="font-size:10px;color:var(--muted)">${card.kind === '正' ? '正' : esc(card.kind)}</div></div>`).join('')}</div>
+          </div>
+        </div>`;
+      }).join('') : '<div class="boardEmpty">这一场全对，没有错题 —— 干净利落！</div>'}
+      <div class="resBtns" style="margin-top:14px">
+        <button class="btn ghost" id="btnRvBack">← 换人看</button>
+        <button class="btn gold" id="btnRvAgain2">🔁 再战一局</button>
+        <button class="btn ghost" id="btnRvBoard2">🏛️ 榜单</button>
+        <button class="btn ghost" id="btnRvHome2">⌂ 回封面</button>
+      </div>
+    </div>
+  </div>`;
+  list.forEach((w, qi) => {   /* 逐卡红标重放（与单人 diagReveal 同款渲染，真相仅属于行为层） */
+    const cvs = s.querySelectorAll('.panel canvas');
+    w.q.cards.forEach((card, ci) => {
+      const cv = cvs[qi * w.q.cards.length + ci];
+      const gx = cv.getContext('2d');
+      drawDiagCard(gx, w.ch, card, card.kind === '正' ? null : '#b03a2e');
+    });
+  });
+  $('btnRvBack').onclick = () => renderPkReview(null);
+  $('btnRvAgain2').onclick = () => go(P_DUO_PREP);
+  $('btnRvBoard2').onclick = () => { BOARD_TAB = 'duo'; BOARD_DIFF = LAST_PK_REVIEW.diff; go(P_BOARD); };
+  $('btnRvHome2').onclick = () => go(P_COVER);
 }
 
 /* ---------- 写楷 ---------- */
@@ -4545,6 +4626,7 @@ function startDuo() {
     L: { name: a, score: 0 }, R: { name: b, score: 0 },
     plan, ri: 0, lock: { L: false, R: false }, answered: {},
     traceScores: { L: null, R: null },
+    wrongLog: { L: [], R: [] },   /* V5.3 复盘：双方各自错题 {ch,pickIdx,q}（答错记 pickIdx；超时双未答记 pickIdx=-1） */
     t0: Date.now(), saved: false, over: false
   };
   toast('PK 开始 · ' + DIFF[PK.diff].name + '难度 · ' + plan.length + ' 轮（字医 ' + cfg.d + ' + 写楷 ' + cfg.t + '）· 双方同题同字');
@@ -4685,6 +4767,14 @@ function pkTimeout() {
     x.classList.add('locked');
     if (x.dataset.o === key) x.classList.add('right');
   });
+  if (q) ['L', 'R'].forEach(sd => PK.wrongLog[sd].push({ ch: q.ch, pickIdx: -1, q }));   /* 超时双未答=各自计一道错题（复盘补课价值最高） */
+  /* V5.3：超时揭示同款病笔红标 */
+  if (q) document.querySelectorAll('#s8 .pkoptbox .diagOpt').forEach(el2 => {
+    const card = q.cards[+el2.dataset.o];
+    const gx = el2.querySelector('canvas').getContext('2d');
+    gx.clearRect(0, 0, L, L);
+    drawDiagCard(gx, q.ch, card, card.kind === '正' ? null : '#b03a2e');
+  });
   toast('⏱ 本轮超时，双方均未得分', true, 1500);
   sndWhoops();
   later(() => { PK.ri++; renderPk(); }, 900);
@@ -4708,12 +4798,19 @@ function pkAnswer(side, el) {
     if (first) PK.answered[r.q.ch] = true;
     PK[side].score = r1(PK[side].score + gain);
     sndRight(); floatScore(el, '+' + gain, side === 'L' ? '#e07b52' : '#7cc4a4');
-  } else { sndWrong(); floatScore(el, '✕', '#ff8f83'); }
+  } else { sndWrong(); floatScore(el, '✕', '#ff8f83'); PK.wrongLog[side].push({ ch: r.q.ch, pickIdx: +el.dataset.o, q: r.q }); }
   setPkV(side, PK[side].score);
   refreshHp();
   if (PK.lock.L && PK.lock.R) {
     pkBarStop();
     const q = r.q, feed = $('pkFeed');
+    /* V5.3（用户拍板）：PK 抢答揭示=单人 diagReveal 同款——病笔红标+病卡标错，不再只亮金框 */
+    document.querySelectorAll('#s8 .pkoptbox .diagOpt').forEach(el2 => {
+      const card = q.cards[+el2.dataset.o];
+      const gx = el2.querySelector('canvas').getContext('2d');
+      gx.clearRect(0, 0, L, L);
+      drawDiagCard(gx, q.ch, card, card.kind === '正' ? null : '#b03a2e');
+    });
     if (feed) {
       const kinds = q.cards.filter(c => c.kind !== '正').map(c => c.kind).join(' / ');
       feed.className = 'qFeed good';
@@ -4820,6 +4917,10 @@ function endDuo() {
     PK.saved = true;
     eggQualifyPk(PK.diff, PK.L.score, PK.R.score);   /* 彩蛋前置条件=本会话内实打的梦魇 PK ≥860（内存旗标，p5） */
   }
+  LAST_PK_REVIEW = {   /* V5.3 复盘内存态（真相仅属于行为层：换玩家/关窗即随会话失效，零清除逻辑） */
+    diff: PK.diff, names: [PK.L.name, PK.R.name],
+    wrong: { L: PK.wrongLog.L.slice(), R: PK.wrongLog.R.slice() }
+  };
   LAST_DUO = {
     L: { name: PK.L.name, score: PK.L.score }, R: { name: PK.R.name, score: PK.R.score },
     win, diff: PK.diff, timed: PK.timed, rounds: PK.plan.length
@@ -4829,6 +4930,7 @@ function endDuo() {
   playClimb(head, 'duoStage', 'duo', () => go(P_DUO_RESULT));
 }
 let LAST_DUO = null;
+let LAST_PK_REVIEW = null;   /* V5.3 复盘内存态：仅当场地存在（go 离屏清空+换玩家登录自然失效），无持久化 */
 
 /* ---------- 揭榜爬榜动画（逐字继承 v6.6.618 playClimb 全套动效与音效节奏） ---------- */
 let climbCtl = null;
@@ -5012,6 +5114,7 @@ function renderDuoResult() {
       </div>
       <div class="resBtns" style="margin-top:14px">
         <button class="btn gold" id="btnDuoAgain">🔁 再战一局</button>
+        <button class="btn" id="btnDuoReview">🔍 赛后复盘</button>
         <button class="btn ghost" id="btnDuoBoard">🏛️ 榜单</button>
         <button class="btn ghost" id="btnDuoHome">⌂ 回封面</button>
       </div>
@@ -5026,6 +5129,7 @@ function renderDuoResult() {
   wireScoreMgmt(() => renderDuoResult(), 'duo');
   if ($('btnDuoBoardAll')) $('btnDuoBoardAll').onclick = () => { BOARD_TAB = 'duo'; BOARD_DIFF = d.diff; go(P_BOARD); };   /* 展开完整榜=直达本局难度子榜 */
   $('btnDuoAgain').onclick = () => go(P_DUO_PREP);
+  if ($('btnDuoReview')) $('btnDuoReview').onclick = () => go(P_REVIEW);   /* V5.3 赛后复盘（P_REVIEW=19，p3） */
   $('btnDuoBoard').onclick = () => go(P_BOARD);
   $('btnDuoHome').onclick = () => go(P_COVER);
 }
@@ -5315,7 +5419,7 @@ init();
 window.__DG = {
   get S() { return S; }, get PK() { return PK; }, get CUR() { return CUR; },
   get DB() { return DB; }, get page() { return CUR_PAGE; },
-  get LAST_DUO() { return LAST_DUO; },
+  get LAST_DUO() { return LAST_DUO; }, get LAST_PK_REVIEW() { return LAST_PK_REVIEW; }, get PAGE_N() { return PAGE_N; },   /* V5.3 复盘钩子（只读） */
   get inkLock() { return INK ? INK.st.lock : null; },   /* 背临锁笔断言钩子（只读） */
 
   go, startSolo, pickTraceSet, judgeScore, autoSegs, timeOf, timeRangeOf,
